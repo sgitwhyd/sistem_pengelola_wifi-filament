@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Company;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -31,7 +32,9 @@ class EditCompany extends Page implements HasForms
     public function mount(): void
     {
         $company = Company::all()->first();
+        $admin = User::find(1);
         $this->form->fill([
+            'email_admin' => $admin->email,
             'logo' => $company->logo,
             'signature_image' => $company->signature_image,
             'name' => $company->name,
@@ -62,7 +65,9 @@ class EditCompany extends Page implements HasForms
                 TextInput::make('no_telp')->label('Nomor Telephone')
                     ->required(),
                 TextInput::make('email')->label('Email')
-                    ->required()
+                    ->required(),
+                TextInput::make('email_admin')->label('Email Admin Login')
+                    ->required(),
             ])
             ->statePath('data');
     }
@@ -83,12 +88,20 @@ class EditCompany extends Page implements HasForms
         
        
         if($company) {
-
             if($data['logo'] != null) {
                 try {
                     $data = $this->form->getState();
-
-                    Company::where('id', 1)->update($data);
+                    User::where('id', 1)->update([
+                        'email' => $data['email_admin']
+                    ]);
+                    Company::where('id', 1)->update([
+                        'logo' => $data['logo'],
+                        'name' => $data['name'],
+                        'alamat' => $data['alamat'],
+                        'no_telp' => $data['no_telp'],
+                        'email' => $data['email'],
+                        'signature_image' => $data['signature_image'],
+                    ]);
                 } catch (Halt $exception) {
                     return;
                 }
@@ -98,8 +111,17 @@ class EditCompany extends Page implements HasForms
 
             try {
                 $data = $this->form->getState();
- 
-                Company::where('id', 1)->update($data);
+                Company::where('id', 1)->update([
+                        'logo' => $data['logo'],
+                        'name' => $data['name'],
+                        'alamat' => $data['alamat'],
+                        'no_telp' => $data['no_telp'],
+                        'email' => $data['email'],
+                        'signature_image' => $data['signature_image'],
+                ]);
+                User::where('id', 1)->update([
+                    'email' => $data['email_admin']
+                ]);
             } catch (Halt $exception) {
                 return;
             }
