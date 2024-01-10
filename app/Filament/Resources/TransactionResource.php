@@ -30,6 +30,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Support\Carbon;
 use stdClass;
 
 class TransactionResource extends Resource
@@ -49,6 +50,8 @@ class TransactionResource extends Resource
 
         $data = array_merge($yearsBefore, [$currentYear]);
         $yearsData = collect($data)->combine($data)->toArray();
+
+        Carbon::setLocale('id');
 
         
         return $form
@@ -83,19 +86,19 @@ class TransactionResource extends Resource
                  Select::make('payment_month')
                 ->label('Pembayaran Bulan')
                 ->options([
-                                'January'    => 'January',
-                                'February'   => 'February',
-                                'March'      => 'March',
+                                'Januari'    => 'Januari',
+                                'Februari'   => 'Februari',
+                                'Maret'      => 'Maret',
                                 'April'      => 'April',
-                                'May'        => 'May',
-                                'June'       => 'June',
-                                'July'       => 'July',
-                                'August'     => 'August',
+                                'Mei'        => 'Mei',
+                                'Juni'       => 'Juni',
+                                'Juli'       => 'Juli',
+                                'Agustus'     => 'Agustus',
                                 'September'  => 'September',
-                                'October'    => 'October',
+                                'Oktober'    => 'Oktober',
                                 'November'   => 'November',
-                                'December'   => 'December',
-                            ])->searchable()->required()->default((Date::now()->format('F'))) ,
+                                'Desember'   => 'Desember',
+                            ])->searchable()->required()->default(Carbon::now()->format('F')) ,
                 Select::make('payment_year')
                     ->options($yearsData)
                     ->label('Tahun Pembayaran')
@@ -155,9 +158,7 @@ class TransactionResource extends Resource
                     ->state(static function (HasTable $livewire, stdClass $rowLoop): string {
                         return (string) (
                             $rowLoop->iteration +
-                             ($livewire->getTableRecordsPerPage() * (
-                                 $livewire->getTablePage() - 1
-                             ))
+                              (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
                 Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer')->searchable(),
@@ -192,28 +193,29 @@ class TransactionResource extends Resource
                 ->height(150)
             ])
             ->filters([
-                           Filter::make('create_at')->form([
+                           Filter::make('created_at')->form([
                             Select::make('status')
                             ->options([
                                 'paid' => 'Sudah Dibayar',
                                 'unpaid' => 'Belum Dibayar',
                                 'pending' => 'pending',
-                            ])->searchAble()->default('paid'),
+                            ])->searchAble()->default('unpaid'),
 
                             Select::make('bulan')->options([
-                                'January'    => 'January',
-                                'February'   => 'February',
-                                'March'      => 'March',
+                                'Januari'    => 'Januari',
+                                'Februari'   => 'Februari',
+                                'Maret'      => 'Maret',
                                 'April'      => 'April',
-                                'May'        => 'May',
-                                'June'       => 'June',
-                                'July'       => 'July',
-                                'August'     => 'August',
+                                'Mei'        => 'Mei',
+                                'Juni'       => 'Juni',
+                                'Juli'       => 'Juli',
+                                'Agustus'     => 'Agustus',
                                 'September'  => 'September',
-                                'October'    => 'October',
+                                'Oktober'    => 'Oktober',
                                 'November'   => 'November',
-                                'December'   => 'December',
-                            ])->searchable()->default(Date::now()->locale('id')->format('F')),
+                                'Desember'   => 'Desember',
+
+                            ])->searchable(),
 
                             Select::make('tahun')->options($yearsData)->searchable()->default(Date('Y')),
                            ])->query(function (Builder $query, array $data): Builder {
@@ -233,8 +235,10 @@ class TransactionResource extends Resource
                     ActionGroup::make([
                                 Tables\Actions\EditAction::make()
                                 ->using(function (Model $record, array $data): Model {
-                                    if($record['payment_proof_image'] !== $data['payment_proof_image']) {
-                                        Storage::disk('public')->delete($record->payment_proof_image);
+                                    if($record['payment_proof_image'] !== null) {
+                                        if($record['payment_proof_image'] !== $data['payment_proof_image']) {
+                                            Storage::disk('public')->delete($record->payment_proof_image);
+                                        }
                                     }
 
                                     $record->update($data);

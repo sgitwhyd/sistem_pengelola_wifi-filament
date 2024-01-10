@@ -189,12 +189,11 @@
         <strong>{{ $invoice->name }}</strong>
     </h4>
 
-   
 
-                 
 
-    <table id="c-table" style="margin-top: 25px;">
-    
+
+
+    <table id="c-table" style="margin-top: 30px;">
         <tr>
             <td width='20%'>Nama</td>
             <td width="15%" style="padding-left: 20px;">:</td>
@@ -217,8 +216,8 @@
                 @endif
             </td>
         </tr>
-        
-        <tr >
+
+        <tr>
             <td width='20%'>Nomor Handphone</td>
             <td width="15%" style="padding-left: 20px;">:</td>
             <td>
@@ -235,7 +234,7 @@
             <td>
                 <div style="margin-left: 20px;">
                     {{$invoice->getDate() }}
-                </div>              
+                </div>
             </td>
         </tr>
     </table>

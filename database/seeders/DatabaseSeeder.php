@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Company;
+use App\Models\Customer;
 use App\Models\Paket;
 use App\Models\Server;
 use Illuminate\Database\Seeder;
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'no_telp' => '0812312323',
             'email' => 'testing@gmail.com'
         ]);
+        
 
         Server::factory()->create([
             'name' => 'Wonogiri',
@@ -40,5 +42,7 @@ class DatabaseSeeder extends Seeder
             'price' => '150000',
             'information' => 'keterangan'
         ]);
+
+        Customer::factory(10)->create();
     }
 }

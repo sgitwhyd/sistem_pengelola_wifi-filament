@@ -73,9 +73,7 @@ class CustomerResource extends Resource
                     ->state(static function (HasTable $livewire, stdClass $rowLoop): string {
                         return (string) (
                             $rowLoop->iteration +
-                            ($livewire->getTableRecordsPerPage() * (
-                                $livewire->getTablePage() - 1
-                            ))
+                            (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
                 Tables\Columns\TextColumn::make('name')
