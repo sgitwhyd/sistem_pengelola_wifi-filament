@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('payment_month');
             $table->string('payment_year');
             $table->timestamps();
+            $table->softDeletes();
 
 
             $table->foreign('customer_id')->on('customers')->references('id')->onDelete('cascade');

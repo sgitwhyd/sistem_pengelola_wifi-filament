@@ -9,6 +9,7 @@ use App\Models\Customer;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
 use Konnco\FilamentImport\Actions\ImportField;
 use Konnco\FilamentImport\Actions\ImportAction;
@@ -49,33 +50,38 @@ class ManageCustomers extends ManageRecords
                     new HtmlString(view('modal-import-description.customer'))
                 )
                 ->modalHeading('Import Data Customer')
-                 ->handleRecordCreation(function (array $data) {
+                ->handleRecordCreation(function (array $data) {
                     
-                     if($paket = PaketResource::getEloquentQuery()->where('name', $data['paket'])->first()) {
-                         if($server = ServerResource::getEloquentQuery()->where('name', $data['server'])->first()) {
-                             return Customer::create([
-                             'name' => $data['name'],
-                             'alamat' => $data['alamat'],
-                             'no_hp' => $data['no_hp'],
-                             'paket_id' => $paket->id,
-                             'server_id' => $server->id,
-                             'ip_address' => $data['ip_address']
-                                 ]);
-                         }
-                     }
+                    if($paket = PaketResource::getEloquentQuery()->where('name', $data['paket'])->first()) {
+                        if($server = ServerResource::getEloquentQuery()->where('name', $data['server'])->first()) {
+                            return Customer::create([
+                            'name' => $data['name'],
+                            'alamat' => $data['alamat'],
+                            'no_hp' => $data['no_hp'],
+                            'paket_id' => $paket->id,
+                            'server_id' => $server->id,
+                            'ip_address' => $data['ip_address']
+                                ]);
+                        }
+                    }
 
-                     return new Customer();
+                    return new Customer();
 
-                     
-                 }),
+                    
+                }),
             ExportAction::make()
                 ->exports([
                     ExcelExport::make()
-                        ->fromTable()
-                        ->except([
-                            'no'
+                        ->fromModel()
+                        ->withColumns([
+                            Column::make('id')->heading('customer_id'),
+                            Column::make('Server')->formatStateUsing(fn ($record) => $record->server->name)->heading('Server'),
+                            Column::make('Paket')->formatStateUsing(fn ($record) => $record->paket->name)->heading('Paket'),
                         ])
-                        ->withFilename(fn ($resource) => $resource::getModelLabel() . '-' . date('Y-m-d'))
+                        ->except([
+                            'created_at', 'updated_at', 'deleted_at', 'paket_id', 'server_id'
+                        ])
+                        ->withFilename(fn ($resource) => 'Data-Customer-' . env('APP_NAME') . '-' . Carbon::now()->locale('id')->translatedFormat('d-F-Y'))
                         ->withWriterType(\Maatwebsite\Excel\Excel::XLS)
                 ]),
         ];

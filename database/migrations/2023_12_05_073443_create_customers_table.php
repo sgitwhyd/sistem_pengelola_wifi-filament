@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('no_hp');
             $table->string('ip_address')->unique();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('paket_id')->on('pakets')->references('id')->onDelete('cascade');
             $table->foreign('server_id')->on('servers')->references('id')->onDelete('cascade');
