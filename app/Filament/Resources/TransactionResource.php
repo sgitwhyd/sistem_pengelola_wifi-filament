@@ -193,7 +193,8 @@ class TransactionResource extends Resource
                 ->height(150)
             ])
             ->filters([
-                           Filter::make('created_at')->form([
+                Tables\Filters\TrashedFilter::make(),
+                        Filter::make('created_at')->form([
                             Select::make('status')
                             ->options([
                                 'paid' => 'Sudah Dibayar',
@@ -245,16 +246,18 @@ class TransactionResource extends Resource
                                     return $record;
 
                                 }),
-                                Tables\Actions\DeleteAction::make()
-                                ->before(function (Transaction $record) {
-                                    if($record->payment_proof_image) {
-                                        Storage::disk('public')->delete($record->payment_proof_image);
-                                    }
-                                }),
+                                Tables\Actions\DeleteAction::make(),
                                 Action::make('Download Invoice')
                                     ->icon('heroicon-o-document-arrow-down')
                                     ->url(fn (Transaction $record) => route('transaction.pdf.download', $record))
-                                    ->openUrlInNewTab()
+                                    ->openUrlInNewTab(),
+                                Tables\Actions\RestoreAction::make(),
+                                Tables\Actions\ForceDeleteAction::make()
+                                    ->before(function (Transaction $record) {
+                                        if($record->payment_proof_image) {
+                                            Storage::disk('public')->delete($record->payment_proof_image);
+                                        }
+                                    }),
                             ])
                             ->label('Actions')
                         ])
@@ -273,5 +276,14 @@ class TransactionResource extends Resource
         return [
             'index' => Pages\ManageTransactions::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereHas('customer', function ($query) {
+            $query->whereNull('customers.deleted_at');
+        })->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
     }
 }

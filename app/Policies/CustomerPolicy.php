@@ -57,7 +57,7 @@ class CustomerPolicy
      */
     public function restore(User $user, Customer $customer): bool
     {
-        return false;
+        return true;
 
     }
 

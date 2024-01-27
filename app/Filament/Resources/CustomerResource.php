@@ -30,9 +30,6 @@ class CustomerResource extends Resource
 
     public static function form(Form $form): Form
     {
-
-        
-
         return $form
             ->schema([
                 Card::make()->schema([
@@ -43,19 +40,19 @@ class CustomerResource extends Resource
                     TextInput::make('no_hp')->label('Nomor Handphone')
                         ->tel()
                         ->telRegex('/^(\+62|0)(\d{8,15})$/')
-                         ->maxLength(14)
+                        ->maxLength(14)
                         ->required(),
                     Select::make('paket_id')
                         ->label('Paket')
                         ->options(Paket::all()->pluck('name', 'id'))
                         ->searchable()
                         ->required(),
-                     Select::make('server_id')
+                    Select::make('server_id')
                         ->label('Server')
                         ->options(Server::all()->pluck('name', 'id'))
                         ->searchable()
                         ->required(),
-                     TextInput::make('ip_address')
+                    TextInput::make('ip_address')
                         ->label('Ip Address')
                         ->unique(ignoreRecord: true)
                         ->ipv4()
@@ -76,8 +73,6 @@ class CustomerResource extends Resource
                             (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
-                 Tables\Columns\TextColumn::make('id')
-                    ->label('Customer Id'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
                     ->sortable()
@@ -108,11 +103,13 @@ class CustomerResource extends Resource
                     ->date()
             ])
             ->filters([
+                Tables\Filters\TrashedFilter::make(),
                                 //
                             ])
             ->actions([
                                 Tables\Actions\EditAction::make(),
                                 Tables\Actions\DeleteAction::make(),
+                                Tables\Actions\RestoreAction::make(),
                             ])
             ->bulkActions([
                                 Tables\Actions\BulkActionGroup::make([
@@ -129,5 +126,13 @@ class CustomerResource extends Resource
         return [
             'index' => Pages\ManageCustomers::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
