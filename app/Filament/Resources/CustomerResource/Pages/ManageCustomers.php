@@ -9,6 +9,7 @@ use App\Models\Customer;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Support\HtmlString;
 use Konnco\FilamentImport\Actions\ImportField;
 use Konnco\FilamentImport\Actions\ImportAction;
 use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
@@ -44,6 +45,10 @@ class ManageCustomers extends ManageRecords
                         ->label('Ip Address')
                         ->required(),
                 ])
+                ->modalDescription(
+                    new HtmlString(view('modal-import-description.customer'))
+                )
+                ->modalHeading('Import Data Customer')
                  ->handleRecordCreation(function (array $data) {
                     
                      if($paket = PaketResource::getEloquentQuery()->where('name', $data['paket'])->first()) {

@@ -76,6 +76,8 @@ class CustomerResource extends Resource
                             (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
+                 Tables\Columns\TextColumn::make('id')
+                    ->label('Customer Id'),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama')
                     ->sortable()

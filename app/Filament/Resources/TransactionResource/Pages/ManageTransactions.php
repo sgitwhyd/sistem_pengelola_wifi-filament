@@ -11,6 +11,7 @@ use Filament\Resources\Pages\ManageRecords;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Filament\Resources\TransactionResource;
 use App\Models\Transaction;
+use Illuminate\Support\HtmlString;
 use Konnco\FilamentImport\Actions\ImportAction;
 use Konnco\FilamentImport\Actions\ImportField;
 use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
@@ -34,6 +35,10 @@ class ManageTransactions extends ManageRecords
                      ImportField::make('payment_year')
                         ->required(),
                 ])
+                 ->modalDescription(
+                     new HtmlString(view('modal-import-description.transaction'))
+                 )
+                ->modalHeading('Import Data Transaction')
                 ->handleRecordCreation(function (array $data) {
                     if($customer = CustomerResource::getEloquentQuery()->where('id', $data['customer_id'])->first()) {
                         return Transaction::create([
