@@ -19,8 +19,8 @@
   @vite('resources/css/app.css')
 </head>
 
-<body class="antialiased max-w-screen-xl mx-auto">
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+<body class="antialiased ">
+  <nav class="bg-white border-gray-200 dark:bg-gray-900 max-w-screen-xl mx-auto">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="/">
         @include('filament.admin.logo', ['company_name' => $company_name, 'company_logo' => $company_logo, ])
@@ -38,10 +38,15 @@
         <ul
           class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <li>
+            <a href="{{ route('pembayaran.index') }}"
+              class="block py-2 px-3  bg-blue-700 rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['pembayaran.index', 'pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} "
+              aria-current="page">Pembayaran</a>
+          </li>
+          <li>
             <a href="{{ route('cek-pembayaran.index') }}"
               class="block py-2 px-3  bg-blue-700 rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['cek-pembayaran.index', 'cek-pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} "
               aria-current="page">Cek Pembayaran</a>
-          </li>
+          </li>   
         </ul>
       </div>
     </div>
