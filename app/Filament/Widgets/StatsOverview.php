@@ -12,6 +12,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class StatsOverview extends BaseWidget
 {
+    protected static ?int $sort = 2;
+
     protected function getStats(): array
     {
         $firstDayOfMonth = Carbon::now()->firstOfMonth();
@@ -28,7 +30,8 @@ class StatsOverview extends BaseWidget
                             ->count()),
         Stat::make('Total Lunas Pembayaran Bulan Ini', Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->where('status', 'paid')->count()),
         Stat::make('Total Paket ', Paket::count()),
-        Stat::make('Total Server', Server::count())
+        Stat::make('Total Server', Server::count()),
+        Stat::make('Pembayaran Menunggu Konfirmasi', Transaction::where('status', 'pending')->count())
         ];
     }
 }
