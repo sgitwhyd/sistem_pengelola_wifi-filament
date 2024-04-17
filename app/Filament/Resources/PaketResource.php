@@ -6,6 +6,7 @@ use App\Filament\Resources\PaketResource\Pages;
 use App\Filament\Resources\PaketResource\RelationManagers;
 use App\Models\Paket;
 use Filament\Forms;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -34,8 +35,14 @@ class PaketResource extends Resource
                     ->numeric()
                     ->prefix('Rp')
                     ->required(),
-                Textarea::make('information')
-                ->label('Keterangan')->required(),
+                RichEditor::make('information')
+                ->label('Keterangan')
+                ->disableToolbarButtons([
+                    'attachFiles',
+                    'codeBlock'
+                ])
+                ->columnSpan(2)
+                ->required(),
             ]);
     }
 
@@ -56,8 +63,7 @@ class PaketResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('information')
                     ->label('Keterangan')
-                    ->searchable()
-                    ->wrap()
+                    ->html()
                     ,
             ])
             ->filters([
