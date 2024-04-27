@@ -18,18 +18,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $data = Company::first();
-    return view('welcome', [
-        'company_logo' => $data->logo,
-        'company_name' => $data->name
-    ]);
+    return view('welcome');
 })->name('home');
 
 
-Route::get('/{record}/pdf', [DownloadPDFController::class, 'download'])->name('transaction.pdf.download');
+Route::get('/print/{record}/pdf', [DownloadPDFController::class, 'download'])->name('transaction.pdf.download');
 
 
-Route::get('/cek-pembayaran', [CheckHistoryPembayaran::class, 'index'])->name('cek-pembayaran.index');
-Route::get('/cek-pembayaran/{user}', [CheckHistoryPembayaran::class, 'show'])->name('cek-pembayaran.show');
+Route::group(['prefix' => 'cek-pembayaran', 'as' => 'cek-pembayaran.'], function () {
+    Route::get('/', [CheckHistoryPembayaran::class, 'index'])->name('index');
+    Route::get('/{user}', [CheckHistoryPembayaran::class, 'show'])->name('show');
+});
 
-Route::get('/pembayaran', [TransactionController::class, 'index'])->name('pembayaran.index');
+
+Route::group(['prefix' => 'pembayaran', 'as' => 'pembayaran.'], function () {
+    Route::get('/', [TransactionController::class, 'index'])->name('index');
+    Route::get('/{name}', [TransactionController::class, 'checkName'])->name('check-name');
+    Route::post('/', [TransactionController::class, 'store'])->name('store');
+});

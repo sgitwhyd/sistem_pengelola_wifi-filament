@@ -11,10 +11,7 @@ class CheckHistoryPembayaran extends Controller
     public function index()
     {
         $data = Company::first();
-        return view('check-pembayaran.index', [
-            'company_logo' => $data->logo,
-            'company_name' => $data->name
-        ]);
+        return view('check-pembayaran.index');
     }
 
     public function show($user)
@@ -26,13 +23,6 @@ class CheckHistoryPembayaran extends Controller
         ->get();
 
         $name = $user;
-        $data = Company::first();
-
-
-        
-        return view('check-pembayaran.show', compact('userTransactions', 'name'), [
-            'company_logo' => $data->logo,
-            'company_name' => $data->name
-        ]);
+        return view('check-pembayaran.show', compact('userTransactions', 'name'));
     }
 }
