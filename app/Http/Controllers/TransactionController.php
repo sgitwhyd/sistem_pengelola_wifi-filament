@@ -7,6 +7,9 @@ use App\Models\Company;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
@@ -23,9 +26,25 @@ class TransactionController extends Controller
         return view('pembayaran.index', compact('banks'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request,)
     {
-        dd($request);
+        $newFilename = Str::after($request->input('image'), 'tmp/');
+        Storage::disk('public')->move($request->input('image'), "bukti-pembayaran/$newFilename");
+
+        $newImgPath = "bukti-pembayaran/$newFilename";
+
+        $customer = Customer::where('name', $request->name)->first();
+        $customer->transactions()->create([
+            'name' => $customer->name,
+            'payment_month' => $request->month,
+            'payment_year' => date('Y'),
+            'payment_proof_image' => $newImgPath,
+            'status' => 'pending',
+            'paket' => $customer->paket->name,
+            'package_price' => $customer->paket->price,
+        ]);
+
+        return redirect()->route('pembayaran.show', ['name' => $customer->name]);
     }
 
     public function checkName(Customer $customer, $name)
@@ -35,12 +54,26 @@ class TransactionController extends Controller
         //format Carbon to indonesian
         Carbon::setLocale('id');
 
+
+        if (!$customer) {
+            $customerFound = false;
+            return view('pembayaran.show', compact('customerFound'));
+        }
+
         // check if customer already payment this month
-       $detailPayment = $customer->transactions()
-            ->where('payment_month', Carbon::now()->format('F'))
-            ->where('payment_year', date('Y'))
-            ->first();
-        $customerAlreadyPay = $detailPayment ? true : false;
-        return view('pembayaran.show', compact('banks', 'customer', 'detailPayment', 'customerAlreadyPay'));
+        $customerFound = true;
+        $detailPayment = $customer->transactions
+            ->last();
+        if ($detailPayment) {
+            if ($detailPayment->status === 'pending') {
+                $customerAlreadyPay = true;
+            } else {
+                $customerAlreadyPay = false;
+            }
+        } else {
+            $customerAlreadyPay = false;
+        }
+
+        return view('pembayaran.show', compact('banks', 'customer', 'detailPayment', 'customerAlreadyPay', 'customerFound'));
     }
 }

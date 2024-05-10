@@ -26,21 +26,21 @@ class ManageTransactions extends ManageRecords
             Actions\CreateAction::make(),
             ImportAction::make()
                 ->fields([
-                     ImportField::make('customer_id')
+                    ImportField::make('customer_id')
                         ->required(),
-                     ImportField::make('status')
+                    ImportField::make('status')
                         ->required(),
-                     ImportField::make('payment_month')
+                    ImportField::make('payment_month')
                         ->required(),
-                     ImportField::make('payment_year')
+                    ImportField::make('payment_year')
                         ->required(),
                 ])
-                 ->modalDescription(
-                     new HtmlString(view('modal-import-description.transaction'))
-                 )
+                ->modalDescription(
+                    new HtmlString(view('modal-import-description.transaction'))
+                )
                 ->modalHeading('Import Data Transaction')
                 ->handleRecordCreation(function (array $data) {
-                    if($customer = CustomerResource::getEloquentQuery()->where('id', $data['customer_id'])->first()) {
+                    if ($customer = CustomerResource::getEloquentQuery()->where('id', $data['customer_id'])->first()) {
                         return Transaction::create([
                             'customer_id' => $data['customer_id'],
                             'status' => $data['status'],
@@ -52,24 +52,23 @@ class ManageTransactions extends ManageRecords
                     }
 
                     return new Transaction();
-                })
-            ,
+                }),
             ExportAction::make()
-            ->exports([
-                ExcelExport::make()
-                    ->fromTable()
-                    ->askForFilename()
-                    ->withFilename(fn ($filename) =>  $filename. ' ' . date('Y-m-d'))
-                    ->except([
+                ->exports([
+                    ExcelExport::make()
+                        ->fromTable()
+                        ->askForFilename()
+                        ->withFilename(fn ($filename) =>  $filename . ' ' . date('Y-m-d'))
+                        ->except([
                             'no'
                         ])
-                    ->withColumns([
-                         Column::make('payment_proof_image')->heading('Bukti Pembayaran')
-                     ->formatStateUsing(fn ($record) => url('/') . '/storage/' . $record->payment_proof_image)
-                    ])
-                    ->withWriterType(\Maatwebsite\Excel\Excel::XLS)
-                 
-            ]),
+                        ->withColumns([
+                            Column::make('payment_proof_image')->heading('Bukti Pembayaran')
+                                ->formatStateUsing(fn ($record) => url('/') . '/storage/' . $record->payment_proof_image)
+                        ])
+                        ->withWriterType(\Maatwebsite\Excel\Excel::XLS)
+
+                ]),
         ];
     }
 }

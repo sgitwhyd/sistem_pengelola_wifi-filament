@@ -39,7 +39,7 @@ class TransactionResource extends Resource
 
     protected static ?string $navigationGroup = 'Data Transaksi';
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
-    
+
 
     public static function form(Form $form): Form
     {
@@ -53,7 +53,7 @@ class TransactionResource extends Resource
 
         Carbon::setLocale('id');
 
-        
+
         return $form
             ->schema([
                 FileUpload::make('payment_proof_image')
@@ -63,82 +63,79 @@ class TransactionResource extends Resource
                     ->directory('bukti-pembayaran')
                     ->required(),
                 Select::make('customer_id')
-                ->label('Customer')
-                ->options(Customer::all()->pluck('name', 'id'))
-                ->searchable()
-                ->afterStateUpdated(function ($set, $state) {
-                    $customer = CustomerResource::getEloquentQuery()->where('id', $state)->first();
-                    if($customer) {
-                        $set('paket', $customer->paket->name);
-                        $set('package_price', $customer->paket->price);
-                    }
-                    
-                })
-                ->reactive()
-                ->required(),
+                    ->label('Customer')
+                    ->options(Customer::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->afterStateUpdated(function ($set, $state) {
+                        $customer = CustomerResource::getEloquentQuery()->where('id', $state)->first();
+                        if ($customer) {
+                            $set('paket', $customer->paket->name);
+                            $set('package_price', $customer->paket->price);
+                        }
+                    })
+                    ->reactive()
+                    ->required(),
                 Select::make('status')
-                ->label('Status Pembayaran')
-                ->options([
-                                'paid' => 'Sudah Dibayar',
-                                'unpaid' => 'Belum Dibayar',
-                                'pending' => 'pending',
-                            ])->searchable()->required() ,
-                 Select::make('payment_month')
-                ->label('Pembayaran Bulan')
-                ->options([
-                                'Januari'    => 'Januari',
-                                'Februari'   => 'Februari',
-                                'Maret'      => 'Maret',
-                                'April'      => 'April',
-                                'Mei'        => 'Mei',
-                                'Juni'       => 'Juni',
-                                'Juli'       => 'Juli',
-                                'Agustus'     => 'Agustus',
-                                'September'  => 'September',
-                                'Oktober'    => 'Oktober',
-                                'November'   => 'November',
-                                'Desember'   => 'Desember',
-                            ])->searchable()->required()->default(Carbon::now()->format('F')) ,
+                    ->label('Status Pembayaran')
+                    ->options([
+                        'paid' => 'Sudah Dibayar',
+                        'unpaid' => 'Belum Dibayar',
+                        'pending' => 'pending',
+                    ])->searchable()->required(),
+                Select::make('payment_month')
+                    ->label('Pembayaran Bulan')
+                    ->options([
+                        'Januari'    => 'Januari',
+                        'Februari'   => 'Februari',
+                        'Maret'      => 'Maret',
+                        'April'      => 'April',
+                        'Mei'        => 'Mei',
+                        'Juni'       => 'Juni',
+                        'Juli'       => 'Juli',
+                        'Agustus'     => 'Agustus',
+                        'September'  => 'September',
+                        'Oktober'    => 'Oktober',
+                        'November'   => 'November',
+                        'Desember'   => 'Desember',
+                    ])->searchable()->required()->default(Carbon::now()->format('F')),
                 Select::make('payment_year')
                     ->options($yearsData)
                     ->label('Tahun Pembayaran')
                     ->searchable()
                     ->required()->default(Date('Y')),
                 TextInput::make('paket')
-                ->label('Info Paket')
-                ->readOnly()
-                ->visible(
-                    function (Get $get) {
-                        $customerId = $get('customer_id');
+                    ->label('Info Paket')
+                    ->readOnly()
+                    ->visible(
+                        function (Get $get) {
+                            $customerId = $get('customer_id');
 
-                        if($customerId !== null) {
-                            return true;
+                            if ($customerId !== null) {
+                                return true;
+                            }
+
+                            return false;
                         }
-
-                        return false;
-                    }
-                )
-                ->required()
-               
-                ,
+                    )
+                    ->required(),
                 TextInput::make('package_price')
-                ->label('Total Pembayaran')
-                ->readOnly()
-                ->numeric()
-                ->prefix('Rp.')
-                ->visible(
-                    function (Get $get) {
-                        $customerId = $get('customer_id');
+                    ->label('Total Pembayaran')
+                    ->readOnly()
+                    ->numeric()
+                    ->prefix('Rp.')
+                    ->visible(
+                        function (Get $get) {
+                            $customerId = $get('customer_id');
 
-                        if($customerId !== null) {
-                            return true;
+                            if ($customerId !== null) {
+                                return true;
+                            }
+
+                            return false;
                         }
-
-                        return false;
-                    }
-                )
-                ->required()
-                ]);
+                    )
+                    ->required()
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -158,119 +155,120 @@ class TransactionResource extends Resource
                     ->state(static function (HasTable $livewire, stdClass $rowLoop): string {
                         return (string) (
                             $rowLoop->iteration +
-                              (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
+                            (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
                 Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer')->searchable(),
                 Tables\Columns\TextColumn::make('customer.server.name')->label('Server')->searchable(),
-                 Tables\Columns\TextColumn::make('paket')->label('Paket')->searchable(),
-                 Tables\Columns\TextColumn::make('created_at')->label('Tanggal Dibuat')->date(),
+                Tables\Columns\TextColumn::make('paket')->label('Paket')->searchable(),
+                Tables\Columns\TextColumn::make('payment_month')->label('Bulan Pembayaran'),
+                Tables\Columns\TextColumn::make('payment_year')->label('Tahun Pembayaran'),
+                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Dibuat')->date(),
                 Tables\Columns\TextColumn::make('status')
-                 ->size(TextColumnSize::Large)
-                ->label('Status Pembayaran')
-                ->color(fn (string $state): string => match ($state) {
-                    'unpaid' => 'gray',
-                    'pending' => 'warning',
-                    'paid' => 'success',
-                })->icon(fn (string $state): string => match ($state) {
-                    'unpaid' => 'heroicon-o-x-circle',
-                    'pending' => 'heroicon-o-clock',
-                    'paid' => 'heroicon-o-check-circle',
-                })
-                ->formatStateUsing(fn (string $state): string => match($state) {
-                    'paid' => 'Sudah Dibayar',
-                    'unpaid' => 'Belum Dibayar',
-                    'pending' => 'pending',
-                })
-                ->badge(),
+                    ->size(TextColumnSize::Large)
+                    ->label('Status Pembayaran')
+                    ->color(fn (string $state): string => match ($state) {
+                        'unpaid' => 'gray',
+                        'pending' => 'warning',
+                        'paid' => 'success',
+                    })->icon(fn (string $state): string => match ($state) {
+                        'unpaid' => 'heroicon-o-x-circle',
+                        'pending' => 'heroicon-o-clock',
+                        'paid' => 'heroicon-o-check-circle',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'paid' => 'Sudah Dibayar',
+                        'unpaid' => 'Belum Dibayar',
+                        'pending' => 'pending',
+                    })
+                    ->badge(),
                 Tables\Columns\TextColumn::make('package_price')
                     ->label('Jumlah Pembayaran')
                     ->prefix('Rp. ')
                     ->numeric(),
                 Tables\Columns\ImageColumn::make('payment_proof_image')
-                ->label('Bukti Pembayaran')
-                ->width(150)
-                ->height(150)
+                    ->label('Bukti Pembayaran')
+                    ->width(150)
+                    ->height(150)
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-                        Filter::make('created_at')->form([
-                            Select::make('status')
-                            ->options([
-                                'paid' => 'Sudah Dibayar',
-                                'unpaid' => 'Belum Dibayar',
-                                'pending' => 'pending',
-                            ])->searchAble()->default('unpaid'),
+                Filter::make('created_at')->form([
+                    Select::make('status')
+                        ->options([
+                            'paid' => 'Sudah Dibayar',
+                            'unpaid' => 'Belum Dibayar',
+                            'pending' => 'Menunggu Verifikasi',
+                        ])->searchAble()->default('pending'),
 
-                            Select::make('bulan')->options([
-                                'Januari'    => 'Januari',
-                                'Februari'   => 'Februari',
-                                'Maret'      => 'Maret',
-                                'April'      => 'April',
-                                'Mei'        => 'Mei',
-                                'Juni'       => 'Juni',
-                                'Juli'       => 'Juli',
-                                'Agustus'     => 'Agustus',
-                                'September'  => 'September',
-                                'Oktober'    => 'Oktober',
-                                'November'   => 'November',
-                                'Desember'   => 'Desember',
+                    Select::make('bulan')->options([
+                        'Januari'    => 'Januari',
+                        'Februari'   => 'Februari',
+                        'Maret'      => 'Maret',
+                        'April'      => 'April',
+                        'Mei'        => 'Mei',
+                        'Juni'       => 'Juni',
+                        'Juli'       => 'Juli',
+                        'Agustus'     => 'Agustus',
+                        'September'  => 'September',
+                        'Oktober'    => 'Oktober',
+                        'November'   => 'November',
+                        'Desember'   => 'Desember',
 
-                            ])->searchable(),
+                    ])->searchable(),
 
-                            Select::make('tahun')->options($yearsData)->searchable()->default(Date('Y')),
-                           ])->query(function (Builder $query, array $data): Builder {
-                               return $query->when(
-                                   $data['bulan'],
-                                   fn (Builder $query, $month): Builder => $query->where('payment_month', $month)
-                               )->when(
-                                   $data['tahun'],
-                                   fn (Builder $query, $year): Builder => $query->where('payment_year', $year)
-                               )->when(
-                                   $data['status'],
-                                   fn (Builder $query, $status): Builder => $query->where('status', $status)
-                               );
-                           }),
-                        ])
+                    Select::make('tahun')->options($yearsData)->searchable()->default(Date('Y')),
+                ])->query(function (Builder $query, array $data): Builder {
+                    return $query->when(
+                        $data['bulan'],
+                        fn (Builder $query, $month): Builder => $query->where('payment_month', $month)
+                    )->when(
+                        $data['tahun'],
+                        fn (Builder $query, $year): Builder => $query->where('payment_year', $year)
+                    )->when(
+                        $data['status'],
+                        fn (Builder $query, $status): Builder => $query->where('status', $status)
+                    );
+                }),
+            ])
             ->actions([
-                    ActionGroup::make([
-                                Tables\Actions\EditAction::make()
-                                ->using(function (Model $record, array $data): Model {
-                                    if($record['payment_proof_image'] !== null) {
-                                        if($record['payment_proof_image'] !== $data['payment_proof_image']) {
-                                            Storage::disk('public')->delete($record->payment_proof_image);
-                                        }
-                                    }
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make()
+                        ->using(function (Model $record, array $data): Model {
+                            if ($record['payment_proof_image'] !== null) {
+                                if ($record['payment_proof_image'] !== $data['payment_proof_image']) {
+                                    Storage::disk('public')->delete($record->payment_proof_image);
+                                }
+                            }
 
-                                    $record->update($data);
-                                    return $record;
-
-                                }),
-                                Tables\Actions\DeleteAction::make(),
-                                Action::make('Download Invoice')
-                                    ->icon('heroicon-o-document-arrow-down')
-                                    ->url(fn (Transaction $record) => route('transaction.pdf.download', $record))
-                                    ->openUrlInNewTab(),
-                                Tables\Actions\RestoreAction::make(),
-                                Tables\Actions\ForceDeleteAction::make()
-                                    ->before(function (Transaction $record) {
-                                        if($record->payment_proof_image) {
-                                            Storage::disk('public')->delete($record->payment_proof_image);
-                                        }
-                                    }),
-                            ])
-                            ->label('Actions')
-                        ])
+                            $record->update($data);
+                            return $record;
+                        }),
+                    Tables\Actions\DeleteAction::make(),
+                    Action::make('Download Invoice')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->url(fn (Transaction $record) => route('transaction.pdf.download', $record))
+                        ->openUrlInNewTab(),
+                    Tables\Actions\RestoreAction::make(),
+                    Tables\Actions\ForceDeleteAction::make()
+                        ->before(function (Transaction $record) {
+                            if ($record->payment_proof_image) {
+                                Storage::disk('public')->delete($record->payment_proof_image);
+                            }
+                        }),
+                ])
+                    ->label('Actions')
+            ])
             ->bulkActions([
-                            Tables\Actions\BulkActionGroup::make([
-                                Tables\Actions\DeleteBulkAction::make(),
-                            ]),
-                        ])
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ])
             ->emptyStateActions([
-                            Tables\Actions\CreateAction::make(),
-                        ])->defaultSort('created_at', 'DESC');
+                Tables\Actions\CreateAction::make(),
+            ])->defaultSort('created_at', 'DESC');
     }
-    
+
     public static function getPages(): array
     {
         return [

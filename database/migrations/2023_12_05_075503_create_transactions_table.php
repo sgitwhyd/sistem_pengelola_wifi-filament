@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->unsignedBigInteger('customer_id');
             $table->string('payment_proof_image')->nullable();
             $table->enum('status', ['paid', 'pending', 'unpaid'])->default('unpaid');

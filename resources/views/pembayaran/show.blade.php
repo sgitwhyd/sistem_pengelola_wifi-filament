@@ -1,63 +1,68 @@
 @extends('components.layouts.master')
 
 @section('content')
-
-<div class="w-full min-h-[calc(100vh-300px)] flex flex-col items-center md:items-start p-5">
-  <h1 class="font-bold text-3xl w-full md:max-w-6xl md:text-center">
-    Pastikan untuk memeriksa kembali detail pembayaran Anda sebelum melanjutkan. Kami ingin memastikan semua informasi sudah benar
+@if($customerFound)
+<div class="w-full">
+  <h1 class="w-full text-xl font-bold md:text-3xl">
+    Sebelum Anda menyelesaikan pembayaran, mohon luangkan waktu sejenak untuk meneliti kembali detail pembayaran Anda. Hal ini penting untuk memastikan bahwa semua informasi yang Anda masukkan sudah akurat dan lengkap.
   </h1>
-  <form class="mt-5 w-full" action="{{ route('pembayaran.store') }}" enctype="multipart/form-data" method="POST">
+  <p class="text-gray-800">
+Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman di kemudian hari.
+  </p>
+  <form class="w-full mt-5" action="{{ route('pembayaran.store', [
+    'name' => $customer->name,
+  ]) }}" enctype="multipart/form-data" method="POST">
     @csrf
     <h1 class="text-2xl font-bold">
       Detail Pelanggan
     </h1>
-    <div class="grid grid-cols-2 md:grid-cols-2 gap-5 mt-5">
+    <div class="grid grid-cols-2 gap-5 mt-5 md:grid-cols-2">
       <div>
-        <h1 class="font-semibold text-xl">
+        <h1 class="text-xl font-semibold">
           Nama Customer
         </h1>
-        <h2 class="font-medium text-lg">
+        <h2 class="text-lg font-medium">
           {{ $customer->name }}
         </h2>
       </div>
       <div>
-        <h1 class="font-semibold text-xl">
+        <h1 class="text-xl font-semibold">
           Alamat
         </h1>
-        <h2 class="font-medium text-lg">
+        <h2 class="text-lg font-medium">
           {{ $customer->alamat }}
         </h2>
       </div>
       <div>
-        <h1 class="font-semibold text-xl">
+        <h1 class="text-xl font-semibold">
           Layanan Wifi Terdaftar
         </h1>
-        <h2 class="font-medium text-lg">
-          {{ $customer->paket->name }}
+        <h2 class="text-lg font-medium">
+          {{ $customer->paket->name }} - Rp {{ number_format($customer->paket->price, 0,0) }}
         </h2>
       </div>
       <div>
-        <h1 class="font-semibold text-xl">
+        <h1 class="text-xl font-semibold">
           Pembayaran Terakhir
         </h1>
-        <h2 class="font-medium text-lg">
+        <h2 class="text-lg font-medium">
           @if($customer->transactions->isEmpty())
           Belum Ada Pembayaran
           @else
-          {{ $customer->transactions->first()->payment_month }}
+          {{ $customer->transactions->last()->payment_month }}
           @endif
         </h2>
       </div>
       <div>
-        <h1 class="font-semibold text-xl">
+        <h1 class="text-xl font-semibold">
           Status Pembayaran Terakhir
         </h1>
-        <h2 class="font-medium text-lg">
-         @if($customer->transactions->isEmpty())
+        <h2 class="text-lg font-medium">
+          @if($customer->transactions->isEmpty())
           Belum Ada Pembayaran
-         @else
+          @else
           @php
-          $status = $customer->transactions->first()->status;
+          $status = $customer->transactions->last()->status;
           $color;
           $value;
           switch ($status) {
@@ -79,47 +84,58 @@
           <span class="{{ $color }} font-medium me-2 px-2.5 py-0.5 rounded">
             {{ $value }}
           </span>
-         @endif
+          @endif
         </h2>
       </div>
     </div>
-    @if($customerAlreadyPay)
-    <div class="flex flex-col justify-center items-center mt-5 space-y-4">
-      <h1 class="font-semibold text-2xl max-w-xl text-center">
-        Anda sudah melakukan pembayaran untuk bulan ini. Jika status pembayaran belum berubah, silakan hubungi admin
+    @if($customerAlreadyPay && $detailPayment->status === 'pending')
+    <div class="flex flex-col items-center justify-center mt-5 space-y-4">
+      <h1 class="max-w-xl text-2xl font-semibold text-center">
+        Anda sudah melakukan pembayaran. Jika status pembayaran belum berubah, silakan hubungi admin
       </h1>
-      <a href="{{ route('transaction.pdf.download', ['record' => $detailPayment->id])}}" target="_blank" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Cetak Nota
-        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-        </svg>
-      </a>
+      <p class="text-lg">
+        Cek Status Pembayaran Pada Link Berikut
+      </p>
+      <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
+        Cek Pembayaran</a>
     </div>
     @else
-    <h1 class="text-2xl font-bold mt-5">
+    @if($detailPayment->payment_month === date('F'))
+    <div class="flex flex-col items-center justify-center mt-5 space-y-4">
+      <h1 class="max-w-xl text-2xl font-semibold text-center">
+        Anda sudah melakukan pembayaran Bulan ini. Jika status pembayaran belum berubah, silakan hubungi admin
+      </h1>
+      <p class="text-lg">
+        Cek Status Pembayaran Pada Link Berikut
+      </p>
+      <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
+        Cek Pembayaran</a>
+    </div>
+    @else
+    <h1 class="mt-5 text-2xl font-bold">
       Nomor Rekening Tersedia
     </h1>
     <p>
       Silakan pilih salah satu nomor rekening yang tersedia untuk melakukan pembayaran
     </p>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-5 mt-3">
+    <div class="grid grid-cols-2 gap-5 mt-3 md:grid-cols-3">
       @foreach($banks as $bank)
-      <div class="bg-white h-32 rounded-lg border border-gray-300 grid grid-cols-3 justify-center items-center p-3">
-        <div class="flex flex-col md:flex-row justify-center items-center">
-          <img src="{{ asset('storage/' . $bank->image) }}" alt="bank logo image" class="w-20 h-20 object-contain">
+      <div class="grid items-center justify-center h-32 grid-cols-3 p-3 bg-white border border-gray-300 rounded-lg">
+        <div class="flex flex-col items-center justify-center md:flex-row">
+          <img src="{{ asset('storage/' . $bank->image) }}" alt="bank logo image" class="object-contain w-20 h-20">
         </div>
         <div class="col-span-2">
-          <h1 class="font-semibold text-lg">
+          <h1 class="text-lg font-semibold">
             {{ $bank->name }}
           </h1>
-          <h2 class="font-medium text-lg">
+          <h2 class="text-lg font-medium">
             {{ $bank->nomor_rekening }}
           </h2>
         </div>
       </div>
       @endforeach
     </div>
-    <h1 class="text-2xl font-bold mt-5">
+    <h1 class="mt-5 text-2xl font-bold">
       Detail Pembayaran
     </h1>
     <div class="grid grid-cols-1 gap-5 mt-3">
@@ -147,14 +163,14 @@
         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
           Upload Bukti Pembayaran
         </label>
-        <input type="file" name="prof" class="filepond" accept="image/*" required />
+        <input type="file" name="image" class="filepond" accept="image/*" required />
       </div>
     </div>
     <div class="mt-5">
-      <h1 class="font-semibold text-xl">
+      <h1 class="text-xl font-semibold">
         Total Tagihan
       </h1>
-      <h2 class="font-medium text-lg">
+      <h2 class="text-lg font-medium">
         Rp. 200.000
       </h2>
     </div>
@@ -162,12 +178,22 @@
       Submit Pembayaran
     </button>
     @endif
+    @endif
   </form>
 </div>
+@else
+<div class="flex flex-col items-center justify-center w-full min-h-screen">
+  <p class="mb-5 text-xl font-medium text-center">
+    Nama Customer Tidak Terdaftar
+  </p>
+  <a href="{{ route('pembayaran.index') }}">
+    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Kembali</button>
+  </a>
+</div>
+@endif
 @endsection
 @section('scripts')
 <script>
-
   // Get a reference to the file input element
   const inputElement = document.querySelector('input[type="file"]');
 

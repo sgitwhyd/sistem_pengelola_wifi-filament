@@ -26,12 +26,12 @@ class StatsOverview extends BaseWidget
         return [
             Stat::make('Total Pelanggan', Customer::all()->count()),
             Stat::make('Pelanggan Baru Bulan Ini', Customer::whereMonth('created_at', $currentMonth)
-                            ->whereYear('created_at', $currentYear)
-                            ->count()),
-        Stat::make('Total Lunas Pembayaran Bulan Ini', Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->where('status', 'paid')->count()),
-        Stat::make('Total Paket ', Paket::count()),
-        Stat::make('Total Server', Server::count()),
-        Stat::make('Pembayaran Menunggu Konfirmasi', Transaction::where('status', 'pending')->count())
+                ->whereYear('created_at', $currentYear)
+                ->count()),
+            Stat::make('Total Lunas Pembayaran Bulan Ini', Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])->where('status', 'paid')->count()),
+            Stat::make('Pembayaran Menunggu Konfirmasi', Transaction::where('status', 'pending')->count()),
+            Stat::make('Total Paket ', Paket::count()),
+            Stat::make('Total Server', Server::count()),
         ];
     }
 }

@@ -17,7 +17,8 @@
         "laravel/tinker": "^2.8",
         "laraveldaily/laravel-invoices": "^3.2",
         "psr/simple-cache": "2.0",
-        "pxlrbt/filament-excel": "^2.1"
+        "pxlrbt/filament-excel": "^2.1",
+        "rahulhaque/laravel-filepond": "10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

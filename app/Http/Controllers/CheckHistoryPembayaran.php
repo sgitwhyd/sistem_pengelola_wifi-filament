@@ -20,7 +20,7 @@ class CheckHistoryPembayaran extends Controller
             $query->where('name', $user);
         })
         ->orderBy('created_at', 'desc')
-        ->get();
+        ->paginate(2);
 
         $name = $user;
         return view('check-pembayaran.show', compact('userTransactions', 'name'));

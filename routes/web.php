@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\CheckHistoryPembayaran;
 use App\Http\Controllers\DownloadPDFController;
+use App\Http\Controllers\Filepond;
+use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\TransactionController;
 use App\Models\Company;
+use App\Models\Paket;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +21,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $pakets = Paket::orderBy('created_at', 'desc')->get();
+    return view('welcome', compact('pakets'));
 })->name('home');
 
 
@@ -33,6 +37,10 @@ Route::group(['prefix' => 'cek-pembayaran', 'as' => 'cek-pembayaran.'], function
 
 Route::group(['prefix' => 'pembayaran', 'as' => 'pembayaran.'], function () {
     Route::get('/', [TransactionController::class, 'index'])->name('index');
-    Route::get('/{name}', [TransactionController::class, 'checkName'])->name('check-name');
-    Route::post('/', [TransactionController::class, 'store'])->name('store');
+    Route::get('/{name}', [TransactionController::class, 'checkName'])->name('show');
+    Route::post('/{name}', [TransactionController::class, 'store'])->name('store');
 });
+
+// for filepond upload
+Route::post('upload', [FilepondController::class, 'upload'])->name('upload');
+Route::delete('revert', [FilepondController::class, 'revert'])->name('revert');
