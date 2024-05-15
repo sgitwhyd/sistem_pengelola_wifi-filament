@@ -4,15 +4,13 @@
 <section class="w-full mt-12 sm:mt-6 lg:mt-8">
   <div class="flex flex-col w-full gap-3 px-4 mx-auto my-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-28 lg:flex-justify lg:flex lg:flex-row">
     <div class="sm:text-center lg:text-left">
-      <h1 class="max-w-3xl text-4xl font-extrabold tracking-tight text-gray-800 sm:text-5xl ">
-        <span class="block xl:inline">
-          Fanayu Daya Network: <span class="block text-indigo-600 xl:inline">
+      <h1 class="max-w-3xl text-4xl font-extrabold tracking-tight text-gray-800 md:leading-tight md:text-5xl">
+        Fanayu Daya Network: <span class="block text-indigo-600 xl:inline">
             Internet Cepat & Stabil</span> untuk Sragen yang Lebih
-        </span>
         <span class="block text-indigo-600 xl:inline">Terkoneksi!</span>
       </h1>
       <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-        Nikmati internet tanpa batas dengan Fanayu Daya Network, pilihan tepat untuk kebutuhan internet rumah dan bisnis Anda di Sragen.
+        Nikmati internet tanpa batas dengan Fanayu Daya Network, pilihan tepat untuk kebutuhan internet rumah dan bisnis Anda.
       </p>
       <!-- Button Section -->
       <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">

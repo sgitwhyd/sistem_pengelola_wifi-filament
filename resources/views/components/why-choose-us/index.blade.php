@@ -5,8 +5,8 @@
         <h2 class="px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-white uppercase bg-indigo-600 rounded-lg font-heading md:w-64 md:mx-auto title-font">
           Why choose us?
         </h2>
-        <p class="mt-2 text-3xl font-semibold leading-8 tracking-tight text-gray-900 font-heading sm:text-4xl">
-          Fanayu Daya Network: Solusi Tepat Kebutuhan Internet Rumah Anda di Sragen!
+        <p class="mt-2 text-3xl font-semibold leading-snug tracking-wide text-gray-900 font-heading sm:text-4xl">
+          Fanayu Daya Network: Solusi Tepat Kebutuhan Internet Rumah Anda!
         </p>
         <p class="max-w-2xl mt-4 text-lg text-gray-500 lg:mx-auto">
           Kami membuat koneksi internet mudah dan terjangkau, dengan pilihan paket fleksibel yang sesuai dengan budget Anda. Kami peduli pelanggan dan siap membantu Anda mengelola tagihan internet.

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bank;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -49,10 +50,10 @@ class TransactionController extends Controller
 
     public function checkName(Customer $customer, $name)
     {
+        Carbon::setLocale('id');
         $customer = $customer->where('name', $name)->first();
         $banks = $this->banks;
         //format Carbon to indonesian
-        Carbon::setLocale('id');
 
 
         if (!$customer) {
@@ -60,19 +61,20 @@ class TransactionController extends Controller
             return view('pembayaran.show', compact('customerFound'));
         }
 
-        // check if customer already payment this month
-        $customerFound = true;
-        $detailPayment = $customer->transactions
-            ->last();
-        if ($detailPayment) {
-            if ($detailPayment->status === 'pending') {
+        $latestPayment = $customer->transactions->last();
+        $currentMonth = Carbon::now()->monthName;
+
+        $customerAlreadyPay = false;
+        if ($latestPayment->payment_month === $currentMonth) {
+            if ($latestPayment->status === 'paid' ||  $latestPayment->status === 'pending') {
                 $customerAlreadyPay = true;
-            } else {
-                $customerAlreadyPay = false;
             }
-        } else {
-            $customerAlreadyPay = false;
         }
+
+
+        $customerFound = true;
+        $detailPayment = $customer->transactions->last();
+
 
         return view('pembayaran.show', compact('banks', 'customer', 'detailPayment', 'customerAlreadyPay', 'customerFound'));
     }

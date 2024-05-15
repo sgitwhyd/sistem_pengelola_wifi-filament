@@ -1,8 +1,6 @@
 @extends('components.layouts.master')
 
 @section('content')
-
-
 @if ($userTransactions->isEmpty())
 <div class="flex flex-col items-center justify-center w-full min-h-screen">
   <p class="mb-5 text-xl font-medium text-center">Tidak Ditemukan Sejarah Pembayaran Customer {{ $name }}.</p>
@@ -11,7 +9,7 @@
   </a>
 </div>
 @else
-<div class="w-full">
+<div class="w-full min-h-screen pt-20">
   <div class="w-full">
     <h1 class="text-2xl ">
       Sejarah Pembayaran Pelanggan <span class="font-bold">

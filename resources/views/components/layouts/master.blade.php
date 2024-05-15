@@ -9,6 +9,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>{{ config('app.name') }}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
   <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -76,6 +81,16 @@ $company_logo = $company->logo;
   @yield('scripts')
   @filamentScripts
   @vite('resources/js/app.js')
+   <script>
+    const url = window.location.href
+    const companyTitle = document.getElementById('logo_text')
+     const companyLogo = document.getElementById('company_logo')
+
+     companyLogo.classList.remove('hidden')
+     companyLogo.style.width = '64px'
+     companyTitle.classList.remove('text-base')
+     companyTitle.classList.add('text-lg')
+  </script>
 </body>
 
 </html>

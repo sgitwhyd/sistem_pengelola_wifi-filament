@@ -4,7 +4,7 @@
 
 <div class="container">
   <div class="w-full">
-    <h1 class="text-lg font-bold md:text-5xl">
+    <h1 class="text-lg font-bold md:leading-snug md:text-5xl">
      Kelola tagihan internet Fanayu Daya Network Anda dengan mudah dan nyaman melalui fitur cek pembayaran online kami.
     </h1>
     <p class="mt-5 text-sm md:text-xl">

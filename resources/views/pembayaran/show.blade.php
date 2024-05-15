@@ -3,11 +3,11 @@
 @section('content')
 @if($customerFound)
 <div class="w-full">
-  <h1 class="w-full text-xl font-bold md:text-3xl">
+  <h1 class="w-full text-xl font-bold md:text-3xl md:leading-snug">
     Sebelum Anda menyelesaikan pembayaran, mohon luangkan waktu sejenak untuk meneliti kembali detail pembayaran Anda. Hal ini penting untuk memastikan bahwa semua informasi yang Anda masukkan sudah akurat dan lengkap.
   </h1>
   <p class="text-gray-800">
-Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman di kemudian hari.
+    Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman di kemudian hari.
   </p>
   <form class="w-full mt-5" action="{{ route('pembayaran.store', [
     'name' => $customer->name,
@@ -88,7 +88,8 @@ Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman d
         </h2>
       </div>
     </div>
-    @if($customerAlreadyPay && $detailPayment->status === 'pending')
+    @if($customerAlreadyPay && $detailPayment->payment_month === Carbon\Carbon::now()->translatedFormat('F'))
+    @if($detailPayment->status === 'pending' || $detailPayment->status === 'paid')
     <div class="flex flex-col items-center justify-center mt-5 space-y-4">
       <h1 class="max-w-xl text-2xl font-semibold text-center">
         Anda sudah melakukan pembayaran. Jika status pembayaran belum berubah, silakan hubungi admin
@@ -96,21 +97,15 @@ Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman d
       <p class="text-lg">
         Cek Status Pembayaran Pada Link Berikut
       </p>
-      <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
-        Cek Pembayaran</a>
+      <div class="flex gap-3">
+        <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" target="_blank" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
+          Cek Pembayaran</a>
+        <a href="https://wa.me/{{ app\models\Company::first()->no_telp }}" target="_blank" class="px-5 py-3 font-semibold text-white bg-green-500 rounded-lg">
+          Hubungi Admin</a>
+      </div>
     </div>
-    @else
-    @if($detailPayment->payment_month === date('F'))
-    <div class="flex flex-col items-center justify-center mt-5 space-y-4">
-      <h1 class="max-w-xl text-2xl font-semibold text-center">
-        Anda sudah melakukan pembayaran Bulan ini. Jika status pembayaran belum berubah, silakan hubungi admin
-      </h1>
-      <p class="text-lg">
-        Cek Status Pembayaran Pada Link Berikut
-      </p>
-      <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
-        Cek Pembayaran</a>
-    </div>
+    @endif
+
     @else
     <h1 class="mt-5 text-2xl font-bold">
       Nomor Rekening Tersedia
@@ -178,7 +173,6 @@ Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman d
       Submit Pembayaran
     </button>
     @endif
-    @endif
   </form>
 </div>
 @else
@@ -207,5 +201,9 @@ Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman d
         resolve(type);
       }),
   });
+
+  const monthInput = document.getElementById('month');
+  const currentMonth = new Date().getMonth();
+
 </script>
 @endsection
