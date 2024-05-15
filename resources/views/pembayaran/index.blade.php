@@ -1,7 +1,8 @@
 @extends('components.layouts.master')
 
 @section("content")
-<div class="w-full min-h-screen pt-20">
+<div class="container flex flex-col justify-center h-[calc(100vh-300px)] pt-20">
+  <div class="w-full ">
   <h1 class="text-lg font-bold md:text-5xl md:leading-snug">
     Pembayaran Mudah dan Nyaman dengan Fanayu Daya Network!
   </h1>
@@ -22,6 +23,7 @@
       </div>
     </form>
   </div>
+</div>
 </div>
 <script>
   $(document).ready(function() {

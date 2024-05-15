@@ -42,7 +42,7 @@
         Fanayu Daya Network menyediakan paket internet yang cocok untuk semua kebutuhan, baik untuk rumah, kantor, maupun sekolah.
       </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 md:gap-12">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 md:gap-12">
       @foreach($pakets as $paket)
       <x-pricing-card title="{{ $paket->name }}" price="{{ $paket->price }}" decription="{!! $paket->information !!}" />
       @endforeach

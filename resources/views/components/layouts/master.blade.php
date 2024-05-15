@@ -40,7 +40,7 @@ $company_logo = $company->logo;
       <a href="/">
         @include('filament.admin.logo', ['company_name' => $company_name, 'company_logo' => $company_logo, ])
       </a>
-      <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+      <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false" id="hamburger">
         <span class="sr-only">Open main menu</span>
         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
@@ -53,6 +53,16 @@ $company_logo = $company->logo;
           </li>
           <li>
             <a href="{{ route('cek-pembayaran.index') }}" class="block py-2 px-3  bg-blue-700 rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['cek-pembayaran.index', 'cek-pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} " aria-current="page">Cek Pembayaran</a>
+          </li>
+        </ul>
+      </div>
+      <div class="hidden w-full md:w-auto" id="navbar-mobile">
+        <ul class="flex flex-col p-4 mt-4 font-medium bg-white">
+          <li class="">
+            <a href="{{ route('pembayaran.index') }}" class="block py-2 px-3  border-b-gray-600  rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['pembayaran.index', 'pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} " aria-current="page">Pembayaran</a>
+          </li>
+          <li>
+            <a href="{{ route('cek-pembayaran.index') }}" class="block py-2 px-3   rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['cek-pembayaran.index', 'cek-pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} " aria-current="page">Cek Pembayaran</a>
           </li>
         </ul>
       </div>
@@ -81,15 +91,26 @@ $company_logo = $company->logo;
   @yield('scripts')
   @filamentScripts
   @vite('resources/js/app.js')
-   <script>
+  <script>
     const url = window.location.href
     const companyTitle = document.getElementById('logo_text')
-     const companyLogo = document.getElementById('company_logo')
+    const companyLogo = document.getElementById('company_logo')
 
-     companyLogo.classList.remove('hidden')
-     companyLogo.style.width = '64px'
-     companyTitle.classList.remove('text-base')
-     companyTitle.classList.add('text-lg')
+    companyLogo.classList.remove('hidden')
+    companyLogo.classList.add('w-10')
+    companyLogo.classList.add('md:w-[64px]')
+    // companyTitle.classList.remove('text-base')
+    // companyTitle.classList.add('text-base')
+    companyTitle.classList.add('md:text-lg')
+
+    $(document).ready(function() {
+      $('.maps iframe').prop('width', '100%');
+      $('.maps iframe').prop('loading', 'lazy');
+
+      $('#hamburger').click(function() {
+        $('#navbar-mobile').toggle();
+      });
+    });
   </script>
 </body>
 

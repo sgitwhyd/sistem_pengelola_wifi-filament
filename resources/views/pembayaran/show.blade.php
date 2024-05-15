@@ -1,51 +1,58 @@
 @extends('components.layouts.master')
 
 @section('content')
-@if($customerFound)
-<div class="w-full">
-  <h1 class="w-full text-xl font-bold md:text-3xl md:leading-snug">
+@php
+use Carbon\Carbon;
+
+Carbon::setLocale('id_ID'); // Set Indonesian locale
+
+$now = Carbon::now();
+@endphp
+@if($customer)
+<div class="flex flex-col justify-center w-full min-h-screen">
+  <h1 class="w-full text-base font-bold md:text-3xl md:leading-snug">
     Sebelum Anda menyelesaikan pembayaran, mohon luangkan waktu sejenak untuk meneliti kembali detail pembayaran Anda. Hal ini penting untuk memastikan bahwa semua informasi yang Anda masukkan sudah akurat dan lengkap.
   </h1>
-  <p class="text-gray-800">
+  <p class="text-xs text-gray-800 md:text-base">
     Kami ingin memastikan kelancaran transaksi Anda dan menghindari kesalahpahaman di kemudian hari.
   </p>
   <form class="w-full mt-5" action="{{ route('pembayaran.store', [
     'name' => $customer->name,
   ]) }}" enctype="multipart/form-data" method="POST">
     @csrf
-    <h1 class="text-2xl font-bold">
+    <h1 class="text-lg font-bold md:text-2xl">
       Detail Pelanggan
     </h1>
     <div class="grid grid-cols-2 gap-5 mt-5 md:grid-cols-2">
       <div>
-        <h1 class="text-xl font-semibold">
+        <h1 class="text-xs font-semibold md:text-xl">
           Nama Customer
         </h1>
-        <h2 class="text-lg font-medium">
+        <h2 class="text-xs font-medium md:text-lg">
           {{ $customer->name }}
         </h2>
       </div>
       <div>
-        <h1 class="text-xl font-semibold">
+        <h1 class="text-xs font-semibold md:text-xl">
           Alamat
         </h1>
-        <h2 class="text-lg font-medium">
+        <h2 class="text-xs font-medium md:text-lg">
           {{ $customer->alamat }}
         </h2>
       </div>
       <div>
-        <h1 class="text-xl font-semibold">
+        <h1 class="text-xs font-semibold md:text-xl">
           Layanan Wifi Terdaftar
         </h1>
-        <h2 class="text-lg font-medium">
+        <h2 class="text-xs font-medium md:text-lg">
           {{ $customer->paket->name }} - Rp {{ number_format($customer->paket->price, 0,0) }}
         </h2>
       </div>
       <div>
-        <h1 class="text-xl font-semibold">
+        <h1 class="text-xs font-semibold md:text-xl">
           Pembayaran Terakhir
         </h1>
-        <h2 class="text-lg font-medium">
+        <h2 class="text-xs font-medium md:text-lg">
           @if($customer->transactions->isEmpty())
           Belum Ada Pembayaran
           @else
@@ -53,11 +60,11 @@
           @endif
         </h2>
       </div>
-      <div>
-        <h1 class="text-xl font-semibold">
+      <div class="col-span-2 md:col-span-1">
+        <h1 class="text-xs font-semibold md:text-xl">
           Status Pembayaran Terakhir
         </h1>
-        <h2 class="text-lg font-medium">
+        <h2 class="text-xs font-medium md:text-lg">
           @if($customer->transactions->isEmpty())
           Belum Ada Pembayaran
           @else
@@ -88,24 +95,20 @@
         </h2>
       </div>
     </div>
-    @if($customerAlreadyPay && $detailPayment->payment_month === Carbon\Carbon::now()->translatedFormat('F'))
-    @if($detailPayment->status === 'pending' || $detailPayment->status === 'paid')
-    <div class="flex flex-col items-center justify-center mt-5 space-y-4">
-      <h1 class="max-w-xl text-2xl font-semibold text-center">
+    @if($customer->transactions->last()->payment_month === $now->monthName)
+    <div class="flex flex-col items-center justify-center max-w-xl gap-10 mx-auto mt-5">
+      <h1 class="text-lg font-semibold text-center md:text-2xl">
         Anda sudah melakukan pembayaran. Jika status pembayaran belum berubah, silakan hubungi admin
-      </h1>
-      <p class="text-lg">
-        Cek Status Pembayaran Pada Link Berikut
-      </p>
-      <div class="flex gap-3">
-        <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" target="_blank" class="px-5 py-3 font-semibold text-white bg-blue-500 rounded-lg">
-          Cek Pembayaran</a>
-        <a href="https://wa.me/{{ app\models\Company::first()->no_telp }}" target="_blank" class="px-5 py-3 font-semibold text-white bg-green-500 rounded-lg">
-          Hubungi Admin</a>
-      </div>
+        <p class="my-3 text-xs font-normal md:my-5 md:text-lg">
+          Cek Status Pembayaran Pada Link Berikut
+        </p>
+        <div class="grid grid-cols-2 gap-3">
+          <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" target="_blank" class="px-5 py-3 text-xs font-semibold text-white bg-blue-500 rounded-lg">
+            Cek Pembayaran</a>
+          <a href="https://wa.me/{{ app\models\Company::first()->no_telp }}" target="_blank" class="px-5 py-3 text-xs font-semibold text-white bg-green-500 rounded-lg">
+            Hubungi Admin</a>
+        </div>
     </div>
-    @endif
-
     @else
     <h1 class="mt-5 text-2xl font-bold">
       Nomor Rekening Tersedia
@@ -123,7 +126,7 @@
           <h1 class="text-lg font-semibold">
             {{ $bank->name }}
           </h1>
-          <h2 class="text-lg font-medium">
+          <h2 class="text-xs font-medium md:text-lg">
             {{ $bank->nomor_rekening }}
           </h2>
         </div>
@@ -133,6 +136,12 @@
     <h1 class="mt-5 text-2xl font-bold">
       Detail Pembayaran
     </h1>
+    @if(session()->has('error'))
+    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+      Upss, Tidak Dapat Melakukan Pembayaran Pada Bulan Yang dipilih
+    </span>
+    @endif
+
     <div class="grid grid-cols-1 gap-5 mt-3">
       <div>
         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -162,10 +171,10 @@
       </div>
     </div>
     <div class="mt-5">
-      <h1 class="text-xl font-semibold">
+      <h1 class="text-xs font-semibold md:text-xl">
         Total Tagihan
       </h1>
-      <h2 class="text-lg font-medium">
+      <h2 class="text-xs font-medium md:text-lg">
         Rp. 200.000
       </h2>
     </div>
@@ -185,6 +194,7 @@
   </a>
 </div>
 @endif
+
 @endsection
 @section('scripts')
 <script>
@@ -204,6 +214,5 @@
 
   const monthInput = document.getElementById('month');
   const currentMonth = new Date().getMonth();
-
 </script>
 @endsection

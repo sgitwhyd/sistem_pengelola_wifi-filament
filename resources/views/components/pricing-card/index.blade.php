@@ -1,5 +1,5 @@
 @props(['title', 'price', 'decription'])
-<div class="flex flex-col p-6 mx-auto space-y-4 text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow g dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white min-w-[350px]">
+<div class="flex flex-col w-full p-6 mx-auto space-y-4 text-center text-gray-900 bg-white border border-gray-100 rounded-lg shadow g dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
   <h3 class="text-2xl font-semibold">
     {{ $title }}
   </h3>
