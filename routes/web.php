@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\CheckHistoryPembayaran;
 use App\Http\Controllers\DownloadPDFController;
+use App\Http\Controllers\Filepond;
+use App\Http\Controllers\FilepondController;
+use App\Http\Controllers\TransactionController;
 use App\Models\Company;
+use App\Models\Paket;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,17 +21,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $data = Company::first();
-    // return view('welcome', [
-    //     'company_logo' => $data->logo,
-    //     'company_name' => $data->name
-    // ]);
-    return redirect('cek-pembayaran');
+    $pakets = Paket::orderBy('created_at', 'desc')->get();
+    return view('welcome', compact('pakets'));
 })->name('home');
 
 
-Route::get('/{record}/pdf', [DownloadPDFController::class, 'download'])->name('transaction.pdf.download');
+Route::get('/print/{record}/pdf', [DownloadPDFController::class, 'download'])->name('transaction.pdf.download');
 
 
-Route::get('/cek-pembayaran', [CheckHistoryPembayaran::class, 'index'])->name('cek-pembayaran.index');
-Route::get('/cek-pembayaran/{user}', [CheckHistoryPembayaran::class, 'show'])->name('cek-pembayaran.show');
+Route::group(['prefix' => 'cek-pembayaran', 'as' => 'cek-pembayaran.'], function () {
+    Route::get('/', [CheckHistoryPembayaran::class, 'index'])->name('index');
+    Route::get('/{user}', [CheckHistoryPembayaran::class, 'show'])->name('show');
+});
+
+
+Route::group(['prefix' => 'pembayaran', 'as' => 'pembayaran.'], function () {
+    Route::get('/', [TransactionController::class, 'index'])->name('index');
+    Route::get('/{name}', [TransactionController::class, 'checkName'])->name('show');
+    Route::post('/{name}', [TransactionController::class, 'store'])->name('store');
+});
+
+// for filepond upload
+Route::post('upload', [FilepondController::class, 'upload'])->name('upload');
+Route::delete('revert', [FilepondController::class, 'revert'])->name('revert');

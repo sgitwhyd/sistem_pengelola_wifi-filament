@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Paket;
 use App\Models\Server;
+use App\Models\Transaction;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -44,5 +45,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Customer::factory(10)->create();
+
+        Transaction::factory(10)->create();
     }
 }

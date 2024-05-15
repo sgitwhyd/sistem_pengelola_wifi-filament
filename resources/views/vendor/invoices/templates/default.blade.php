@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>{{ $invoice->name }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -383,8 +384,7 @@
             @if($invoice->notes)
             <img src="{{ $invoice->notes }}" height="80" alt="" style="position: absolute; left: 20px; top: 40px;" />
             @endif
-            <img src="{{ $invoice->getLogo() }}" alt="logo" height="100"
-                style="z-index: 99; position: absolute; left: 70px;" />
+            <img src="{{ $invoice->getLogo() }}" alt="logo" height="100" style="z-index: 99; position: absolute; left: 70px;" />
             @if($invoice->seller->name)
             <p class="seller-name" style="margin-top: 100px; text-align: center;">
                 <strong>{{ $invoice->seller->name }}</strong>
@@ -406,4 +406,5 @@
             }
         </script>
 </body>
+
 </html>

@@ -11,7 +11,7 @@ class TransactionChart extends ChartWidget
     protected static ?string $heading;
     protected int | string | array $columnSpan = '2';
     protected static ?string $maxHeight = '500px';
-    
+
 
     public function __construct()
     {
@@ -32,7 +32,6 @@ class TransactionChart extends ChartWidget
         for ($day = 1; $day <= $lastDay; $day++) {
             $currentDate = Carbon::create($currentMonth->year, $currentMonth->month, $day);
             $arrayDateOfMonth[] = $currentDate->translatedFormat('l-d-Y');
-
         }
 
         $startDate = Carbon::now()->startOfMonth();
@@ -41,23 +40,19 @@ class TransactionChart extends ChartWidget
         $datesForMonth = collect(Carbon::parse($startDate)->daysUntil($endDate)->toArray());
         $totalTransactionInDate = $datesForMonth->map(
             function ($date) {
-                return Transaction::where('status', 'paid')->whereDate('updated_at', $date->format('Y-m-d'))->count();
+                return Transaction::whereDate('created_at', $date->format('Y-m-d'))->count();
             }
         )->toArray();
 
-
-
-
         return [
-             'datasets' => [
-                 [
-                     'label' => 'Jumlah Transaksi',
-                     'data' => $totalTransactionInDate,
-                 ],
-             ],
-             'labels' => $arrayDateOfMonth,
-         ];
-
+            'datasets' => [
+                [
+                    'label' => 'Jumlah Transaksi',
+                    'data' => $totalTransactionInDate,
+                ],
+            ],
+            'labels' => $arrayDateOfMonth,
+        ];
     }
 
     protected function getType(): string
