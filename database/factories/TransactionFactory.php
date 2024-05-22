@@ -19,15 +19,16 @@ class TransactionFactory extends Factory
     {
         Carbon::setLocale('id-ID');
 
-         $month = Carbon::now()->monthName;
+        $month = Carbon::now()->monthName;
+        $monthMinesOne = Carbon::now()->subMonth()->monthName;
 
         return [
             'customer_id' => $this->faker->numberBetween(1, 10),
             'payment_proof_image' => 'payment_proof_image.jpg',
             'paket' => 'SOHO 5 Mbps',
-            'status' => $this->faker->randomElement(['pending', 'unpaid', 'paid']),
+            'status' => 'pending',
             'package_price' => 150000,
-            'payment_month' => $month,
+            'payment_month' => $monthMinesOne,
             'payment_year' => '2024'
         ];
     }

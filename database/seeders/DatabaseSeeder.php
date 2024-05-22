@@ -10,6 +10,7 @@ use App\Models\Paket;
 use App\Models\Server;
 use App\Models\Transaction;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,29 +24,57 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('12345678')
+            'password' => bcrypt('password')
         ]);
 
         Company::factory()->create([
-            'name' => 'JCOMP',
-            'alamat' => 'Wonogiri',
+            'name' => 'Fanayu Daya Network',
+            'alamat' => 'Sragen',
             'no_telp' => '0812312323',
-            'email' => 'testing@gmail.com'
-        ]);
-        
-
-        Server::factory()->create([
-            'name' => 'Wonogiri',
-            'information' => 'Keterangan',
-        ]);
-        Paket::factory()->create([
-            'name' => 'SOHO 5 Mbps',
-            'price' => '150000',
-            'information' => 'keterangan'
+            'email' => 'fanayudayanetwork@gmail.com'
         ]);
 
-        Customer::factory(10)->create();
 
-        Transaction::factory(10)->create();
+        for ($i = 1; $i <= 5; $i++) {
+            Server::factory()->create([
+                'name' => 'Wonogiri ' . $i,
+                'information' => 'Keterangan',
+            ]);
+        }
+
+        for ($i = 1; $i <= 5; $i++) {
+            Paket::factory()->create([
+                'name' => 'SOHO ' . $i . '0 Mbps',
+                'price' => '1' . $i . '0000',
+                'information' => 'keterangan'
+            ]);
+        }
+
+
+        for ($i = 1; $i <= 30; $i++) {
+            Customer::factory()->create([
+                'name' => 'Customer ' . $i,
+                'alamat' => 'Alamat ' . $i,
+                'no_hp' => '0812312323' . $i,
+                'ip_address' => '192.168.1.' . $i,
+                'paket_id' => rand(1, 5),
+                'server_id' => rand(1, 5),
+            ]);
+        }
+
+        $monthMinesOne = Carbon::now()->subMonth()->monthName;
+
+        for ($i = 1; $i <= 30; $i++) {
+            $num = rand(1, 5);
+            Transaction::factory()->create([
+                'customer_id' => $i,
+                'payment_proof_image' => 'payment_proof_image.jpg',
+                'paket' => 'SOHO ' . $num . '0 Mbps',
+                'status' => 'paid',
+                'package_price' => intval('1' . $num . '0000'),
+                'payment_month' => $monthMinesOne,
+                'payment_year' => '2024'
+            ]);
+        }
     }
 }
