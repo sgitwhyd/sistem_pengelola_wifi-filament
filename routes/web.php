@@ -5,7 +5,6 @@ use App\Http\Controllers\DownloadPDFController;
 use App\Http\Controllers\Filepond;
 use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\TransactionController;
-use App\Models\Company;
 use App\Models\Paket;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $pakets = Paket::orderBy('created_at', 'desc')->get();
+    $pakets = Paket::orderBy('price', 'asc')->get();
     return view('welcome', compact('pakets'));
 })->name('home');
 
