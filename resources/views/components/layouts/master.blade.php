@@ -99,8 +99,6 @@ $company_logo = $company->logo;
     companyLogo.classList.remove('hidden')
     companyLogo.classList.add('w-10')
     companyLogo.classList.add('md:w-[64px]')
-    // companyTitle.classList.remove('text-base')
-    // companyTitle.classList.add('text-base')
     companyTitle.classList.add('md:text-lg')
 
     $(document).ready(function() {
@@ -111,6 +109,12 @@ $company_logo = $company->logo;
         $('#navbar-mobile').toggle();
       });
     });
+
+    function wifiReservation(data) {
+      const template = `Halo Fanayu Daya Network saya ingin memasang paket ${data}.`;
+      const url = `https://wa.me/{{ $company->no_telp }}?text=${template}`;
+      window.open(url, '_blank');
+    }
   </script>
 </body>
 

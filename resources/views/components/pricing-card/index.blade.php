@@ -14,6 +14,7 @@
     {!! $decription !!}
   </div>
 
-  <a href="#" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-indigo-900">Get
-    started</a>
+  <div class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-indigo-900 cursor-pointer"
+   onclick="wifiReservation('{{ $title }}')">Get
+    started</div>
 </div>
