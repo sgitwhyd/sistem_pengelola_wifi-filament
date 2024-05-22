@@ -30,9 +30,9 @@ class DownloadPDFController extends Controller
             'custom_fields' => [
                 'Telp' => $company->no_telp,
                 'email' => $company->email,
-                ],
-            
-]);
+            ],
+
+        ]);
 
 
         $collection = [
@@ -60,10 +60,8 @@ class DownloadPDFController extends Controller
             ->dateFormat('d-m-Y')
             ->logo(public_path('/storage/' . $company->signature_image))
             ->filename(' pembayaran_' . $record->customer->name . '_' . date('d-m-y'))
-            ->notes(public_path('/storage/' . $company->logo))
-        ;
+            ->notes(public_path('/storage/' . $company->logo));
 
         return $invoice->stream();
-
     }
 }

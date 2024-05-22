@@ -54,12 +54,12 @@ class BankResource extends Resource
     {
         return $table
             ->columns([
-                 TextColumn::make('no')
+                TextColumn::make('no')
                     ->label('No')
                     ->state(static function (HasTable $livewire, stdClass $rowLoop): string {
                         return (string) (
                             $rowLoop->iteration +
-                              (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
+                            (intval($livewire->getTableRecordsPerPage()) * (intval($livewire->getTablePage()) - 1))
                         );
                     }),
                 Tables\Columns\TextColumn::make('name'),
@@ -76,7 +76,7 @@ class BankResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->using(function (Model $record, array $data): Model {
-                        if(isset($data['image'])) {
+                        if (isset($data['image'])) {
                             Storage::disk('public')->delete($record->image);
                         }
 
@@ -91,7 +91,7 @@ class BankResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    
+
                 ]),
             ]);
     }
