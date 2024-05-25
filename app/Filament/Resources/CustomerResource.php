@@ -39,8 +39,13 @@ class CustomerResource extends Resource
                     TextInput::make('alamat')->required(),
                     TextInput::make('no_hp')->label('Nomor Handphone')
                         ->tel()
-                        ->telRegex('/^(\+62|0)(\d{8,15})$/')
+                        ->telRegex('/^(\+62)(\d{8,15})$/')
                         ->maxLength(14)
+                        ->required(),
+                    TextInput::make('ip_address')
+                        ->label('Ip Address')
+                        ->unique(ignoreRecord: true)
+                        ->ipv4()
                         ->required(),
                     Select::make('paket_id')
                         ->label('Paket')
@@ -52,11 +57,7 @@ class CustomerResource extends Resource
                         ->options(Server::all()->pluck('name', 'id'))
                         ->searchable()
                         ->required(),
-                    TextInput::make('ip_address')
-                        ->label('Ip Address')
-                        ->unique(ignoreRecord: true)
-                        ->ipv4()
-                        ->required(),
+
                 ])
             ]);
     }
@@ -78,13 +79,13 @@ class CustomerResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ip_address')
-                        ->label('Ip Address')
-                        ->sortable()
-                        ->searchable(),
+                    ->label('Ip Address')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('server.name')
-                        ->label('Nama Server')
-                        ->sortable()
-                        ->searchable(),
+                    ->label('Nama Server')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
                     ->label('Alamat')
                     ->sortable()
@@ -104,23 +105,23 @@ class CustomerResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-                                //
-                            ])
+                //
+            ])
             ->actions([
-                                Tables\Actions\EditAction::make(),
-                                Tables\Actions\DeleteAction::make(),
-                                Tables\Actions\RestoreAction::make(),
-                            ])
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
+            ])
             ->bulkActions([
-                                Tables\Actions\BulkActionGroup::make([
-                                    Tables\Actions\DeleteBulkAction::make(),
-                                ]),
-                            ])
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ])
             ->emptyStateActions([
-                                Tables\Actions\CreateAction::make(),
-                            ])->defaultSort('created_at', 'DESC');
+                Tables\Actions\CreateAction::make(),
+            ])->defaultSort('created_at', 'DESC');
     }
-    
+
     public static function getPages(): array
     {
         return [
