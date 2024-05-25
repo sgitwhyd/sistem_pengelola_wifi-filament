@@ -27,7 +27,7 @@ class EditCompany extends Page implements HasForms
     protected static string $view = 'filament.pages.edit-company';
     protected static ?string $navigationGroup = 'Company Data';
     protected static ?string $navigationLabel = 'Settings';
-    
+
 
     public function mount(): void
     {
@@ -43,7 +43,7 @@ class EditCompany extends Page implements HasForms
             'email' => $company->email
         ]);
     }
- 
+
     public function form(Form $form): Form
     {
         return $form
@@ -63,6 +63,9 @@ class EditCompany extends Page implements HasForms
                 TextInput::make('alamat')
                     ->required(),
                 TextInput::make('no_telp')->label('Nomor Telephone')
+                    ->tel()
+                    ->telRegex('/^(\+62)(\d{8,15})$/')
+                    ->maxLength(14)
                     ->required(),
                 TextInput::make('email')->label('Email')
                     ->required(),
@@ -85,10 +88,10 @@ class EditCompany extends Page implements HasForms
     {
         $company = Company::first();
         $data = $this->form->getState();
-        
-       
-        if($company) {
-            if($data['logo'] != null) {
+
+
+        if ($company) {
+            if ($data['logo'] != null) {
                 try {
                     $data = $this->form->getState();
                     User::where('id', 1)->update([
@@ -112,12 +115,12 @@ class EditCompany extends Page implements HasForms
             try {
                 $data = $this->form->getState();
                 Company::where('id', 1)->update([
-                        'logo' => $data['logo'],
-                        'name' => $data['name'],
-                        'alamat' => $data['alamat'],
-                        'no_telp' => $data['no_telp'],
-                        'email' => $data['email'],
-                        'signature_image' => $data['signature_image'],
+                    'logo' => $data['logo'],
+                    'name' => $data['name'],
+                    'alamat' => $data['alamat'],
+                    'no_telp' => $data['no_telp'],
+                    'email' => $data['email'],
+                    'signature_image' => $data['signature_image'],
                 ]);
                 User::where('id', 1)->update([
                     'email' => $data['email_admin']
@@ -127,11 +130,9 @@ class EditCompany extends Page implements HasForms
             }
 
             Notification::make()
-            ->title('Saved successfully')
-            ->success()
-            ->send();
-
-           
+                ->title('Saved successfully')
+                ->success()
+                ->send();
         }
     }
 }
