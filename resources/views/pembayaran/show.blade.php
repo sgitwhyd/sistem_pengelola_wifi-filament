@@ -105,8 +105,8 @@ $now = Carbon::now();
         <div class="grid grid-cols-2 gap-3">
           <a href="{{ route('cek-pembayaran.show', ['user' => $customer->name]) }}" target="_blank" class="px-5 py-3 text-xs font-semibold text-white bg-blue-500 rounded-lg">
             Cek Pembayaran</a>
-          <a href="https://wa.me/{{ app\models\Company::first()->no_telp }}" target="_blank" class="px-5 py-3 text-xs font-semibold text-white bg-green-500 rounded-lg">
-            Hubungi Admin</a>
+          <div class="px-5 py-3 text-xs font-semibold text-white bg-green-500 rounded-lg" onclick="sendAdminChat('{{ $customer }}')">
+            Hubungi Admin</div>
         </div>
     </div>
     @else
@@ -214,5 +214,15 @@ $now = Carbon::now();
 
   const monthInput = document.getElementById('month');
   const currentMonth = new Date().getMonth();
+
+
+  function sendAdminChat(customer) {
+    const data = JSON.parse(customer);
+    const lastTransaction = data.transactions[data.transactions.length - 1];
+
+    const message = `Halo Admin Fanayu Daya Network, saya *${data.name}* ingin menanyakan status pembayaran saya masih berstatus *${lastTransaction.status.toUpperCase()}*. Saya sudah melakukan pembayaran wifi *${lastTransaction.payment_month} ${lastTransaction.payment_year}*. Mohon bantuannya. Terima kasih.`;
+
+    window.open(`https://wa.me/{{ app\models\Company::first()->no_telp }}?text=${message}`, '_blank');
+  }
 </script>
 @endsection
