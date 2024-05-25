@@ -44,15 +44,14 @@ class ServerResource extends Resource
                     ->label('Nama Server')
                     ->searchable(),
                 TextColumn::make('information')
-                    ->label('Keterangan')
-                    ,
+                    ->label('Keterangan'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -63,7 +62,7 @@ class ServerResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getPages(): array
     {
         return [

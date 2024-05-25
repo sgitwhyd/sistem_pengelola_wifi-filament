@@ -68,9 +68,7 @@ class BankResource extends Resource
                 Tables\Columns\TextColumn::make('nomor_rekening')
                     ->label('Nomor Rekening'),
                 Tables\Columns\ImageColumn::make('image')
-                    ->label('Bank Logo')
-                    ->width(80)
-                    ->height(80),
+                    ->label('Bank Logo'),
             ])
             ->filters([
                 //
@@ -85,10 +83,10 @@ class BankResource extends Resource
                         $record->update($data);
                         return $record;
                     }),
-                Tables\Actions\DeleteAction::make()
-                    ->before(function (Bank $bank) {
-                        Storage::disk('public')->delete($bank->image);
-                    }),
+                // Tables\Actions\DeleteAction::make()
+                //     ->before(function (Bank $bank) {
+                //         Storage::disk('public')->delete($bank->image);
+                //     }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
