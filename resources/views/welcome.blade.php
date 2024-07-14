@@ -6,7 +6,7 @@
     <div class="sm:text-center lg:text-left">
       <h1 class="max-w-3xl text-4xl font-extrabold tracking-tight text-gray-800 md:leading-tight md:text-5xl">
         Fanayu Daya Network: <span class="block text-indigo-600 xl:inline">
-            Internet Cepat & Stabil</span> untuk Sragen yang Lebih
+          Internet Cepat & Stabil</span> untuk Sragen yang Lebih
         <span class="block text-indigo-600 xl:inline">Terkoneksi!</span>
       </h1>
       <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
@@ -15,8 +15,8 @@
       <!-- Button Section -->
       <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
         <div class="rounded-md shadow">
-          <a href="#pricing" class="flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-gray-600 md:py-4 md:text-lg md:px-10">
-            Get started
+          <a href="#pricing" class="flex items-center justify-center w-full px-8 py-3 text-base font-medium text-white bg-gray-800 border border-transparent rounded-md hover:bg-indigo-600 md:py-4 md:text-lg md:px-10">
+            Mulai Berlangganan
           </a>
         </div>
       </div>

@@ -2,9 +2,11 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Customer;
 use App\Models\Transaction;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Concerns\ToArray;
 
 class TransactionChart extends ChartWidget
 {
@@ -16,42 +18,64 @@ class TransactionChart extends ChartWidget
     public function __construct()
     {
         Carbon::setLocale('id');
-        self::$heading = 'Jumlah Total Pembayaran Tiap Hari Pada Bulan ' . Carbon::now()->translatedFormat('F');
+        self::$heading = 'Jumlah Total Pembayaran Tiap Bulan Tahun' . Carbon::now()->year;
     }
 
     protected static ?int $sort = 1;
 
     protected function getData(): array
     {
-        Carbon::setLocale('id');
-        $currentMonth = Carbon::now();
-        $lastDay = $currentMonth->daysInMonth;
+        Carbon::setLocale('en_EN');
+        $now = Carbon::now();
 
-        $arrayDateOfMonth = [];
+        $months = collect(
+            array_map(
+                fn ($month) => Carbon::create($now->year, $month, 1)->translatedFormat('F'),
+                range(1, 12)
+            )
+        )->toArray();
 
-        for ($day = 1; $day <= $lastDay; $day++) {
-            $currentDate = Carbon::create($currentMonth->year, $currentMonth->month, $day);
-            $arrayDateOfMonth[] = $currentDate->translatedFormat('l-d-Y');
+        $results = [];
+
+        foreach ($months as $month) {
+            $results[] = Transaction::where('payment_month', $month)->where('status', 'paid')
+                ->where('payment_year', $now->year)
+                ->count();
         }
 
-        $startDate = Carbon::now()->startOfMonth();
-        $endDate = Carbon::now()->endOfMonth();
+        $indonesianMonths = [
+            0 => 'Januari',
+            1 => 'Februari',
+            2 => 'Maret',
+            3 => 'April',
+            4 => 'Mei',
+            5 => 'Juni',
+            6 => 'Juli',
+            7 => 'Agustus',
+            8 => 'September',
+            9 => 'Oktober',
+            10 => 'November',
+            11 => 'Desember',
 
-        $datesForMonth = collect(Carbon::parse($startDate)->daysUntil($endDate)->toArray());
-        $totalTransactionInDate = $datesForMonth->map(
-            function ($date) {
-                return Transaction::whereDate('created_at', $date->format('Y-m-d'))->count();
-            }
-        )->toArray();
+
+        ];
+
+
+        $paidCustomerInMonth = Transaction::where('payment_month', $now->monthName)->where('status', 'paid')->where('payment_year', $now->year)->
+        select('customer_id as id')->distinct()->get();
+
+        $unpaidCustomerInMonth = Customer::with('paket')->whereNotIn('id', $paidCustomerInMonth->pluck('id'))->get();
+
 
         return [
             'datasets' => [
                 [
                     'label' => 'Jumlah Transaksi',
-                    'data' => $totalTransactionInDate,
+                    'data' => $results,
                 ],
             ],
-            'labels' => $arrayDateOfMonth,
+            'backgroundColor' => '#4c51bf',
+            'labels' => $indonesianMonths,
         ];
     }
 

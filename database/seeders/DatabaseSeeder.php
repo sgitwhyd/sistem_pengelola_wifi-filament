@@ -73,7 +73,9 @@ class DatabaseSeeder extends Seeder
                 'status' => 'paid',
                 'package_price' => intval('1' . $num . '0000'),
                 'payment_month' => $monthMinesOne,
-                'payment_year' => '2024'
+                'payment_year' => '2024',
+                'created_at' => '2024-06-08 14:37:23',
+                'updated_at' =>'2024-06-08 14:37:23',
             ]);
         }
     }

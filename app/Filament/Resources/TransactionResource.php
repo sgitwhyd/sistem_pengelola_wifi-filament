@@ -80,23 +80,23 @@ class TransactionResource extends Resource
                     ->options([
                         'paid' => 'Sudah Dibayar',
                         'unpaid' => 'Belum Dibayar',
-                        'pending' => 'pending',
+                        'pending' => 'Menunggu Konfirmasi',
                     ])->searchable()->required(),
                 Select::make('payment_month')
                     ->label('Pembayaran Bulan')
                     ->options([
-                        'Januari'    => 'Januari',
-                        'Februari'   => 'Februari',
-                        'Maret'      => 'Maret',
+                        'January'    => 'Januari',
+                        'February'   => 'Februari',
+                        'March'      => 'Maret',
                         'April'      => 'April',
-                        'Mei'        => 'Mei',
-                        'Juni'       => 'Juni',
-                        'Juli'       => 'Juli',
-                        'Agustus'     => 'Agustus',
+                        'Mey'        => 'Mei',
+                        'June'       => 'Juni',
+                        'July'       => 'Juli',
+                        'August'     => 'Agustus',
                         'September'  => 'September',
-                        'Oktober'    => 'Oktober',
+                        'October'    => 'Oktober',
                         'November'   => 'November',
-                        'Desember'   => 'Desember',
+                        'December'   => 'Desember',
                     ])->searchable()->required()->default(Carbon::now()->format('F')),
                 Select::make('payment_year')
                     ->options($yearsData)
@@ -161,9 +161,13 @@ class TransactionResource extends Resource
                 Tables\Columns\TextColumn::make('customer.name')->label('Nama Customer')->searchable(),
                 Tables\Columns\TextColumn::make('customer.server.name')->label('Server')->searchable(),
                 Tables\Columns\TextColumn::make('paket')->label('Paket')->searchable(),
-                Tables\Columns\TextColumn::make('payment_month')->label('Bulan Pembayaran'),
+                Tables\Columns\TextColumn::make('payment_month')->label('Bulan Pembayaran')
+                ->formatStateUsing(function (string $state): string {
+                    Carbon::setLocale('id');
+                    return Carbon::parse($state)->translatedFormat('F');
+                }),
                 Tables\Columns\TextColumn::make('payment_year')->label('Tahun Pembayaran'),
-                Tables\Columns\TextColumn::make('created_at')->label('Tanggal Dibuat')->date(),
+                Tables\Columns\TextColumn::make('updated_at')->label('Tanggal Dibuat')->date(),
                 Tables\Columns\TextColumn::make('status')
                     ->size(TextColumnSize::Large)
                     ->label('Status Pembayaran')
@@ -179,7 +183,7 @@ class TransactionResource extends Resource
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'paid' => 'Sudah Dibayar',
                         'unpaid' => 'Belum Dibayar',
-                        'pending' => 'pending',
+                        'pending' => 'Menunggu Konfirmasi',
                     })
                     ->badge(),
                 Tables\Columns\TextColumn::make('package_price')
@@ -202,18 +206,18 @@ class TransactionResource extends Resource
                         ])->searchAble()->default('pending'),
 
                     Select::make('bulan')->options([
-                        'Januari'    => 'Januari',
-                        'Februari'   => 'Februari',
-                        'Maret'      => 'Maret',
+                        'January'    => 'Januari',
+                        'February'   => 'Februari',
+                        'March'      => 'Maret',
                         'April'      => 'April',
-                        'Mei'        => 'Mei',
-                        'Juni'       => 'Juni',
-                        'Juli'       => 'Juli',
-                        'Agustus'     => 'Agustus',
+                        'Mey'        => 'Mei',
+                        'June'       => 'Juni',
+                        'July'       => 'Juli',
+                        'August'     => 'Agustus',
                         'September'  => 'September',
-                        'Oktober'    => 'Oktober',
+                        'October'    => 'Oktober',
                         'November'   => 'November',
-                        'Desember'   => 'Desember',
+                        'December'   => 'Desember',
 
                     ])->searchable(),
 

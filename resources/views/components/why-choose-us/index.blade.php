@@ -3,7 +3,7 @@
     <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="lg:text-center">
         <h2 class="px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-white uppercase bg-indigo-600 rounded-lg font-heading md:w-64 md:mx-auto title-font">
-          Why choose us?
+          Kenapa Kami?
         </h2>
         <p class="mt-2 text-3xl font-semibold leading-snug tracking-wide text-gray-900 font-heading sm:text-4xl">
           Fanayu Daya Network: Solusi Tepat Kebutuhan Internet Rumah Anda!

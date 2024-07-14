@@ -56,7 +56,7 @@ class DownloadPDFController extends Controller
             ->currencyFormat('{SYMBOL}{VALUE}')
             ->currencyThousandsSeparator('.')
             ->status($status)
-            ->date($record->created_at)
+            ->date($record->updated_at)
             ->dateFormat('d-m-Y')
             ->logo(public_path('/storage/' . $company->signature_image))
             ->filename(' pembayaran_' . $record->customer->name . '_' . date('d-m-y'))

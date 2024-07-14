@@ -54,6 +54,11 @@ $company_logo = $company->logo;
           <li>
             <a href="{{ route('cek-pembayaran.index') }}" class="block py-2 px-3  bg-blue-700 rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['cek-pembayaran.index', 'cek-pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} " aria-current="page">Cek Pembayaran</a>
           </li>
+          <li>
+            <a href="/admin/login" class="block px-3 py-2 rounded md:bg-transparent md:p-0 dark:text-white md:dark:text-blue-500 " aria-current="page">
+              Login
+            </a>
+          </li>
         </ul>
       </div>
       <div class="hidden w-full md:w-auto" id="navbar-mobile">
@@ -63,6 +68,11 @@ $company_logo = $company->logo;
           </li>
           <li>
             <a href="{{ route('cek-pembayaran.index') }}" class="block py-2 px-3   rounded md:bg-transparent text-blue-500  md:p-0 dark:text-white md:dark:text-blue-500 {{ request()->routeIs(['cek-pembayaran.index', 'cek-pembayaran.show']) ? ' text-blue-500' : ' text-gray-900' }} " aria-current="page">Cek Pembayaran</a>
+          </li>
+          <li>
+            <a href="/admin/login" class="block px-3 py-2 text-blue-500 rounded md:bg-transparent md:p-0 dark:text-white md:dark:text-blue-500 " aria-current="page">
+              Login
+            </a>
           </li>
         </ul>
       </div>

@@ -39,7 +39,7 @@ class BankResource extends Resource
                     TextInput::make('nomor_rekening')
                         ->label('Nomor Rekening')
                         ->unique(ignoreRecord: true)
-                        ->tel()
+                        ->numeric()
                         ->maxLength(16)
                         ->required(),
                     FileUpload::make('image')

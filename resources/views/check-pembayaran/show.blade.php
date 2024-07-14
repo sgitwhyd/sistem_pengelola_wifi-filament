@@ -1,6 +1,12 @@
 @extends('components.layouts.master')
 
 @section('content')
+@php
+use Carbon\Carbon;
+
+Carbon::setLocale('id_ID'); // Set Indonesian locale
+
+@endphp
 <div class="container flex flex-col h-[calc(100vh-300px)]">
   @if ($userTransactions->isEmpty())
   <div class="flex flex-col items-center justify-center w-full h-full">
@@ -13,7 +19,7 @@
   <div class="w-full min-h-screen pt-20">
     <div class="w-full">
       <h1 class="text-2xl ">
-        Sejarah Pembayaran Pelanggan <span class="font-bold">
+        Riwayat Pembayaran Pelanggan <span class="font-bold">
           {{ $name }}
         </span>
       </h1>
@@ -27,7 +33,7 @@
                 No
               </th>
               <th scope="col" class="px-6 py-3">
-                Nama Pelanggan :
+                Nama Pelanggan
               </th>
               <th scope="col" class="px-6 py-3">
                 Status Pembayaran
@@ -72,13 +78,13 @@
                 @endif
               </td>
               <td class="px-6 py-4">
-                {{ $item->payment_month }}
+                {{ Carbon::parse($item->payment_month)->translatedFormat('F')}}
               </td>
               <td class="px-6 py-4">
                 {{ $item->paket }} Rp. {{ number_format($item->package_price, 0, ',', '.') }}
               </td>
               <td class="px-6 py-4">
-                {{ $item->created_at->format('d-m-Y') }}
+                {{ Carbon::parse($item->created_at)->translatedFormat('d F Y')}}
               </td>
               <td class="px-6 py-4">
                 @if($item->status === 'paid')

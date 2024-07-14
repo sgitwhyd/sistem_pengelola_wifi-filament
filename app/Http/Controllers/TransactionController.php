@@ -31,8 +31,8 @@ class TransactionController extends Controller
     public function store(Request $request,)
     {
         $months = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
-            "Agustus", "September", "Oktober", "November", "Desember"
+            "January", "February", "March", "April", "Mey", "June", "July",
+            "August", "September", "October", "November", "December"
         ];
 
 

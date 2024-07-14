@@ -4,7 +4,7 @@
 @php
 use Carbon\Carbon;
 
-Carbon::setLocale('id_ID'); // Set Indonesian locale
+Carbon::setLocale('en_EN'); // Set Indonesian locale
 
 $now = Carbon::now();
 @endphp
@@ -56,7 +56,7 @@ $now = Carbon::now();
           @if($customer->transactions->isEmpty())
           Belum Ada Pembayaran
           @else
-          {{ $customer->transactions->last()->payment_month }}
+          {{ $customer->transactions->last()->created_at->translatedFormat('d F Y') }}
           @endif
         </h2>
       </div>
@@ -114,7 +114,7 @@ $now = Carbon::now();
       Nomor Rekening Tersedia
     </h1>
     <p>
-      Silakan pilih salah satu nomor rekening yang tersedia untuk melakukan pembayaran
+      Silakan melakukan pembayaran ke salah satu nomor rekening yang tersedia, lalu upload bukti pembayaran pada form di bawah ini.
     </p>
     <div class="grid grid-cols-2 gap-5 mt-3 md:grid-cols-3">
       @foreach($banks as $bank)
@@ -149,18 +149,18 @@ $now = Carbon::now();
         </label>
         <select id="month" name="month" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
           <option selected>Pilih Bulan Pembayaran</option>
-          <option value="Januari">Januari</option>
-          <option value="Februari">Februari</option>
-          <option value="Maret">Maret</option>
+          <option value="January">Januari</option>
+          <option value="February">Februari</option>
+          <option value="March">Maret</option>
           <option value="April">April</option>
-          <option value="Mei">Mei</option>
-          <option value="Juni">Juni</option>
-          <option value="Juli">Juli</option>
-          <option value="Agustus">Agustus</option>
+          <option value="Mey">Mei</option>
+          <option value="June">Juni</option>
+          <option value="July">Juli</option>
+          <option value="August">Agustus</option>
           <option value="September">September</option>
-          <option value="Oktober">Oktober</option>
+          <option value="October">Oktober</option>
           <option value="November">November</option>
-          <option value="Desember">Desember</option>
+          <option value="December">Desember</option>
         </select>
       </div>
       <div>
@@ -175,7 +175,7 @@ $now = Carbon::now();
         Total Tagihan
       </h1>
       <h2 class="text-xs font-medium md:text-lg">
-        Rp. 200.000
+        Rp {{number_format( $customer->paket->price, 0,0) }}
       </h2>
     </div>
     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-5">

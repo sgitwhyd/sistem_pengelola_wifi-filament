@@ -26,8 +26,10 @@ class ManageCustomers extends ManageRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ,
             ImportAction::make()
+                ->label('Import Data Customer')
                 ->uniqueField('name')
                 ->fields([
                     ImportField::make('name')

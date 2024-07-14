@@ -24,35 +24,35 @@ class ManageTransactions extends ManageRecords
     {
         return [
             Actions\CreateAction::make(),
-            ImportAction::make()
-                ->fields([
-                    ImportField::make('customer_id')
-                        ->required(),
-                    ImportField::make('status')
-                        ->required(),
-                    ImportField::make('payment_month')
-                        ->required(),
-                    ImportField::make('payment_year')
-                        ->required(),
-                ])
-                ->modalDescription(
-                    new HtmlString(view('modal-import-description.transaction'))
-                )
-                ->modalHeading('Import Data Transaction')
-                ->handleRecordCreation(function (array $data) {
-                    if ($customer = CustomerResource::getEloquentQuery()->where('id', $data['customer_id'])->first()) {
-                        return Transaction::create([
-                            'customer_id' => $data['customer_id'],
-                            'status' => $data['status'],
-                            'payment_month' => $data['payment_month'],
-                            'payment_year' => $data['payment_year'],
-                            'paket' => $customer->paket->name,
-                            'package_price' => $customer->paket->price
-                        ]);
-                    }
+            // ImportAction::make()
+            //     ->fields([
+            //         ImportField::make('customer_id')
+            //             ->required(),
+            //         ImportField::make('status')
+            //             ->required(),
+            //         ImportField::make('payment_month')
+            //             ->required(),
+            //         ImportField::make('payment_year')
+            //             ->required(),
+            //     ])
+            //     ->modalDescription(
+            //         new HtmlString(view('modal-import-description.transaction'))
+            //     )
+            //     ->modalHeading('Import Data Transaction')
+            //     ->handleRecordCreation(function (array $data) {
+            //         if ($customer = CustomerResource::getEloquentQuery()->where('id', $data['customer_id'])->first()) {
+            //             return Transaction::create([
+            //                 'customer_id' => $data['customer_id'],
+            //                 'status' => $data['status'],
+            //                 'payment_month' => $data['payment_month'],
+            //                 'payment_year' => $data['payment_year'],
+            //                 'paket' => $customer->paket->name,
+            //                 'package_price' => $customer->paket->price
+            //             ]);
+            //         }
 
-                    return new Transaction();
-                }),
+            //         return new Transaction();
+            //     }),
             ExportAction::make()
                 ->exports([
                     ExcelExport::make()
