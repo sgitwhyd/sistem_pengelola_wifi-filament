@@ -18,7 +18,7 @@ class TransactionChart extends ChartWidget
     public function __construct()
     {
         Carbon::setLocale('id');
-        self::$heading = 'Jumlah Total Pembayaran Tiap Bulan Tahun' . Carbon::now()->year;
+        self::$heading = 'Jumlah Total Pembayaran Tiap Bulan Tahun ' . Carbon::now()->year;
     }
 
     protected static ?int $sort = 1;

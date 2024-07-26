@@ -29,12 +29,12 @@ class StatsOverview extends BaseWidget
         $titleCustomer = 'Pelanggan Baru Bulan ' . Carbon::now()->translatedFormat('F');
         $titleLunas = 'Total Lunas Pembayaran Bulan ' . Carbon::now()->translatedFormat('F');
 
-        $totalPaidThisMonth = Transaction::whereBetween('updated_at', [$firstDayOfMonth, $lastDayOfMonth])->where('status', 'paid')
-        ->whereNotNull('deleted_at')
-        ->count();
+        $totalPaidThisMonth = Transaction::whereBetween('updated_at', [$firstDayOfMonth, $lastDayOfMonth])->where('status', 'paid')->count();
 
         $titleUnpaidThisMonth = 'Total Belum Lunas Bulan ' . Carbon::now()->translatedFormat('F');
         $totalUnpaidThisMonth =  Customer::count() - $totalPaidThisMonth;
+
+
 
         return [
             Stat::make('Total Pelanggan', Customer::all()->count()),
